@@ -14,7 +14,11 @@ export const gameState = $state({
 	showSelectGenerations: false,
 	choices: /** @type {string[]} */ ([]),
 	numOfQuestions: 0,
-	numOfRightAnswer: 0
+	numOfRightAnswer: 0,
+	// Professor Oak Chat State
+	showProfessorOak: false,
+	chatMessages: /** @type {{ role: string; content: string }[]} */ ([]),
+	isChatLoading: false
 });
 
 // Reset game function
