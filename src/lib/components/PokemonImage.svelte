@@ -73,7 +73,7 @@
 							class="block mx-auto absolute h-full aspect-square transition duration-1000 select-none pointer-events-none"
 							class:brightness-0={$hidePokemon}
 						/>
-						<canvas bind:this={canvas} class="" />
+						<canvas bind:this={canvas} class=""></canvas>
 					</div>
 				{/key}
 			</div>
