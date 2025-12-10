@@ -1,74 +1,65 @@
 <script>
-	import {
-		hidePokemon,
-		showSelectGenerations,
-		choices,
-		pokemon,
-		numOfRightAnswer,
-		numOfQuestions
-	} from '../store';
-	import { getRandomPokemon, selectRandomPokemonIdFromGen } from '../pokemon';
+	import { gameState } from '../state.svelte.js';
+	import { getRandomPokemon, selectRandomPokemonIdFromGen } from '../pokemon.svelte.js';
 
-	const showPokemon = () => ($hidePokemon = false);
-	let right_answer = null;
-	let wrong_answer = null;
+	const showPokemon = () => (gameState.hidePokemon = false);
+	let rightAnswer = $state(/** @type {string | null} */ (null));
+	let wrongAnswer = $state(/** @type {string | null} */ (null));
 
 	function play() {
-		$numOfQuestions = 0;
-		$numOfRightAnswer = 0;
+		gameState.numOfQuestions = 0;
+		gameState.numOfRightAnswer = 0;
 		getRandomPokemon();
 	}
 
 	function checkAnswer(answer) {
 		showPokemon();
 		selectRandomPokemonIdFromGen();
-		right_answer = $pokemon.name;
-		$numOfQuestions += 1;
-		if (answer !== right_answer) {
-			wrong_answer = answer;
+		rightAnswer = gameState.pokemon?.name ?? null;
+		gameState.numOfQuestions += 1;
+		if (answer !== rightAnswer) {
+			wrongAnswer = answer;
 		} else {
-			$numOfRightAnswer += 1;
+			gameState.numOfRightAnswer += 1;
 		}
 	}
 
 	function quit() {
-		$pokemon = null;
-		right_answer = null;
+		gameState.pokemon = null;
+		rightAnswer = null;
 		selectRandomPokemonIdFromGen();
 	}
 </script>
 
 <section class="container grid sm:grid-cols-2 gap-4 px-4">
-	{#if !$pokemon}
-		<button on:click={play} class="btn bg-emerald-500 border-b-emerald-700 text-white">
-			{$numOfQuestions === 0 ? 'Play' : 'Play Again'}
+	{#if !gameState.pokemon}
+		<button onclick={play} class="btn bg-emerald-500 border-b-emerald-700 text-white">
+			{gameState.numOfQuestions === 0 ? 'Play' : 'Play Again'}
 		</button>
 		<button
-			on:click={() => ($showSelectGenerations = true)}
+			onclick={() => (gameState.showSelectGenerations = true)}
 			class="btn bg-pink-500 border-b-pink-700 text-white"
 		>
 			Select Gen
 		</button>
 	{:else}
-		{#each $choices as choice}
+		{#each gameState.choices as choice}
 			<button
-				on:click={() => checkAnswer(choice)}
-				class=" btn
-						{choice === right_answer ? 'btn-correct' : ''}
-						{choice === wrong_answer ? 'btn-wrong' : ''}
-						"
-				class:btn-disable={!$hidePokemon}
-				disabled={!$hidePokemon}
+				onclick={() => checkAnswer(choice)}
+				class="btn {choice === rightAnswer ? 'btn-correct' : ''} {choice === wrongAnswer
+					? 'btn-wrong'
+					: ''}"
+				class:btn-disable={!gameState.hidePokemon}
+				disabled={!gameState.hidePokemon}
 			>
 				{choice}
 			</button>
 		{/each}
-		{#if $hidePokemon}
-			<button on:click={quit} class=" btn bg-sky-500 border-sky-700 text-white">
-				Quit
-			</button>{:else}
-			<button on:click={getRandomPokemon} class=" btn bg-sky-500 border-sky-700 text-white">
-				{'Next'}
+		{#if gameState.hidePokemon}
+			<button onclick={quit} class="btn bg-sky-500 border-sky-700 text-white"> Quit </button>
+		{:else}
+			<button onclick={getRandomPokemon} class="btn bg-sky-500 border-sky-700 text-white">
+				Next
 			</button>
 		{/if}
 	{/if}
