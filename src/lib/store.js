@@ -11,3 +11,8 @@ export const numOfChoices = 3;
 export let choices = writable([]);
 export let numOfQuestions = writable(0);
 export let numOfRightAnswer = writable(0);
+
+// Professor Oak Chat State
+export let showProfessorOak = writable(false);
+export let chatMessages = writable([]);
+export let isChatLoading = writable(false);
