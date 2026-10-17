@@ -2,19 +2,22 @@
 	import { scale } from 'svelte/transition';
 	import { gameState } from '../state.svelte.js';
 
+	/** @param {CanvasRenderingContext2D} ctx */
 	function drawSpiky(ctx) {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		const surface = canvas;
+		if (!surface) return;
+		ctx.clearRect(0, 0, surface.width, surface.height);
 		ctx.fillStyle = '#0284c7';
 		ctx.beginPath();
 		for (let theta = 0; theta <= Math.PI * 2; theta += 0.05) {
-			const radius = Math.random() * canvas.width * 0.3 + canvas.width * 0.25;
+			const radius = Math.random() * surface.width * 0.3 + surface.width * 0.25;
 			ctx.lineTo(halfWidth + radius * Math.cos(theta), halfHeight + radius * Math.sin(theta));
 		}
 		ctx.fill();
 		ctx.fillStyle = '#e5e5e5';
 		ctx.beginPath();
 		for (let theta = 0; theta <= Math.PI * 2; theta += 0.05) {
-			const radius = Math.random() * canvas.width * 0.2 + canvas.width * 0.25;
+			const radius = Math.random() * surface.width * 0.2 + surface.width * 0.25;
 			ctx.lineTo(halfWidth + radius * Math.cos(theta), halfHeight + radius * Math.sin(theta));
 		}
 		ctx.fill();

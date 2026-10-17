@@ -9,6 +9,7 @@ export function getRandomPokemon() {
 	gameState.choices = shuffleChoices(names);
 }
 
+/** @param {number} id */
 function getName(id) {
 	return pokemonNames[id - 1];
 }
@@ -34,6 +35,7 @@ function getRandomPokemonId() {
 	return Math.floor(Math.random() * totalPokemon) + 1;
 }
 
+/** @param {number} index */
 function getOffset(index) {
 	let offset = 0;
 	for (let i = 0; i < index; i += 1) {
@@ -42,11 +44,13 @@ function getOffset(index) {
 	return offset;
 }
 
+/** @param {number} id */
 function getNames(id) {
 	const choiceId = [id, getRandomPokemonId(), getRandomPokemonId()];
 	return choiceId.map((tempId) => getName(tempId));
 }
 
+/** @param {string[]} names */
 function shuffleChoices(names) {
 	return [...names].sort(() => 0.5 - Math.random());
 }

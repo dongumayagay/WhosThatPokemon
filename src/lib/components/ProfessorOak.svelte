@@ -66,6 +66,7 @@
 		}
 	}
 
+	/** @param {KeyboardEvent} event */
 	function handleKeydown(event) {
 		if (event.key === 'Enter' && !event.shiftKey) {
 			event.preventDefault();
@@ -93,6 +94,7 @@
 		onclick={(e) => e.stopPropagation()}
 		onkeydown={(e) => e.stopPropagation()}
 		role="dialog"
+		tabindex="-1"
 		aria-label="Chat with Professor Oak"
 		transition:scale={{ duration: 300, start: 0.9 }}
 	>

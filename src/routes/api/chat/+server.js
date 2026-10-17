@@ -29,6 +29,7 @@ export async function POST({ request }) {
       return json({ error: 'Please enter a question under 2,000 characters.' }, { status: 400 });
     }
 
+    /** @type {{ role: 'user' | 'assistant', content: string }[]} */
     const history = Array.isArray(payload?.history) ? payload.history : [];
     const contents = history.slice(-12)
       .filter((item) => item && (item.role === 'user' || item.role === 'assistant') && typeof item.content === 'string')

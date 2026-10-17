@@ -12,6 +12,7 @@
 		getRandomPokemon();
 	}
 
+	/** @param {string} answer */
 	function checkAnswer(answer) {
 		showPokemon();
 		selectRandomPokemonIdFromGen();

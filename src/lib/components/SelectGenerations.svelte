@@ -9,6 +9,7 @@
 	// Local state for temp selection (using $state)
 	let tempSelectedGen = $state([...gameState.selectedGenerations]);
 
+	/** @param {number} gen */
 	function toggleGeneration(gen) {
 		if (tempSelectedGen.includes(gen)) {
 			tempSelectedGen = tempSelectedGen.filter((g) => g !== gen);
