@@ -58,7 +58,7 @@ The project uses `@sveltejs/adapter-cloudflare` and a Git-connected Cloudflare P
 | Setting | Value |
 | --- | --- |
 | Cloudflare Pages URL | `https://whos-that-pokemon-7iu.pages.dev` |
-| Build command | `bun install && bun run check && bun run build` |
+| Build command | `bun ci && bun run check && bun run build` |
 | Output directory | `.svelte-kit/cloudflare` |
 | Bun version | `1.4.3` via Cloudflare `BUN_VERSION` |
 | Node version | `22.17.0` via `.node-version` and Cloudflare `NODE_VERSION` |
@@ -72,7 +72,7 @@ A successful GitHub push is not sufficient to claim a deployment is live. Verify
 
 [`.github/dependabot.yml`](.github/dependabot.yml) configures weekly **Bun** dependency updates. Dependabot creates update PRs; it does not merge or deploy updates automatically.
 
-The repository contains a text-based `bun.lock` originally generated before the Cloudflare adapter / Gemini SDK migration. **Its dependency snapshot needs to be regenerated and committed** before using `bun install --frozen-lockfile` in CI. Cloudflare currently runs a regular `bun install` to resolve manifest changes. Do not describe the build as reproducible yet.
+The repository contains a text-based `bun.lock` originally generated before the Cloudflare adapter / Gemini SDK migration. The committed `bun.lock` contains the Cloudflare adapter and Gemini SDK, with dependency ranges synchronized to `package.json`. Cloudflare verifies installs with `bun ci` before checking and building.
 
 ## Current limitations
 
