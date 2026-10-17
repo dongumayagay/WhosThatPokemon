@@ -48,6 +48,8 @@ npm run build
 
 ## Cloudflare deployment (Bun)
 
+Cloudflare staging URL: https://whos-that-pokemon-7iu.pages.dev/
+
 This app runs on Cloudflare Pages using `@sveltejs/adapter-cloudflare`.
 
 - Install dependencies with Bun 1.4.3, then run `bun run check` and `bun run build`.
