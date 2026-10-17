@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GEMINI_API_KEY } from '$env/static/private';
+import { GoogleGenAI } from '@google/genai';
+import { env } from '$env/dynamic/private';
 
 const PROFESSOR_OAK_SYSTEM_PROMPT = `You are Professor Oak, the world-renowned Pokemon researcher from Pallet Town. You speak in a friendly, wise, and encouraging manner, just like in the Pokemon games and anime.
 
@@ -17,53 +17,40 @@ Keep responses concise but informative (2-3 paragraphs max). Stay in character a
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
-	try {
-		const { message, history } = await request.json();
+  // Keep the key on the server; do not let an absent key break the entire build.
+  if (!env.GEMINI_API_KEY) {
+    return json({ error: 'Professor Oak is not configured yet.' }, { status: 503 });
+  }
 
-		if (!GEMINI_API_KEY) {
-			return json(
-				{ error: 'Gemini API key not configured. Please set GEMINI_API_KEY in your environment.' },
-				{ status: 500 }
-			);
-		}
+  try {
+    const payload = await request.json();
+    const message = typeof payload?.message === 'string' ? payload.message.trim() : '';
+    if (!message || message.length > 2000) {
+      return json({ error: 'Please enter a question under 2,000 characters.' }, { status: 400 });
+    }
 
-		const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-		const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const history = Array.isArray(payload?.history) ? payload.history : [];
+    const contents = history.slice(-12)
+      .filter((item) => item && (item.role === 'user' || item.role === 'assistant') && typeof item.content === 'string')
+      .map((item) => ({
+        role: item.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: item.content.slice(0, 2000) }]
+      }));
+    contents.push({ role: 'user', parts: [{ text: message }] });
 
-		// Build conversation history for context
-		const chatHistory = history.map((/** @type {{ role: string; content: string }} */ msg) => ({
-			role: msg.role === 'user' ? 'user' : 'model',
-			parts: [{ text: msg.content }]
-		}));
+    const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+    const result = await ai.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents,
+      config: {
+        systemInstruction: PROFESSOR_OAK_SYSTEM_PROMPT,
+        maxOutputTokens: 450
+      }
+    });
 
-		const chat = model.startChat({
-			history: [
-				{
-					role: 'user',
-					parts: [{ text: 'You are Professor Oak. ' + PROFESSOR_OAK_SYSTEM_PROMPT }]
-				},
-				{
-					role: 'model',
-					parts: [
-						{
-							text: "Ah, hello there! Welcome to the world of Pokemon! I'm Professor Oak, a Pokemon researcher. I've been studying these fascinating creatures for many years. What would you like to know about Pokemon today?"
-						}
-					]
-				},
-				...chatHistory
-			]
-		});
-
-		const result = await chat.sendMessage(message);
-		const response = await result.response;
-		const text = response.text();
-
-		return json({ message: text });
-	} catch (error) {
-		console.error('Chat API Error:', error);
-		return json(
-			{ error: 'Failed to get response from Professor Oak. Please try again.' },
-			{ status: 500 }
-		);
-	}
+    return json({ message: result.text || "I'm still thinking. Could you try another question?" });
+  } catch (error) {
+    console.error('Professor Oak request failed:', error);
+    return json({ error: 'Professor Oak is temporarily unavailable.' }, { status: 502 });
+  }
 }
