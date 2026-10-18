@@ -22,7 +22,7 @@ test('answers are in a compact two-column mobile grid with usable hit areas',()=
  assert.match(control,/min-h-\[48px\]/);
 });
 test('hidden Pokémon is drawn as a mask, never as a previewable color image',()=>{
- assert.match(image,/class="pokemon-silhouette\\b/);
+ assert.match(image,/class="pokemon-silhouette\b/);
  assert.match(image,/mask-image/);
  assert.match(image,/\{#if gameState.hidePokemon\}/);
  assert.match(image,/-webkit-touch-callout:\s*none/);
