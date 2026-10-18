@@ -29,13 +29,13 @@
 	}
 </script>
 
-<div class="fixed h-full w-full bg-black/50 z-20 grid place-items-center px-4" transition:fade>
+<div class="fixed inset-0 z-30 grid place-items-center overflow-y-auto bg-black/60 p-3" transition:fade>
 	<div
-		class="bg-neutral-200 rounded-xl gap-4 w-full sm:w-[500px] px-8 py-6 grid grid-cols-2"
+		class="grid max-h-[calc(100dvh-2rem)] w-full max-w-md grid-cols-2 gap-2 overflow-y-auto rounded-xl bg-neutral-200 p-4 sm:gap-4 sm:p-6"
 		transition:scale
 	>
 		{#each options as gen}
-			<label class="{tempSelectedGen.includes(gen) ? 'btn-selected' : ''} btn col-span-2">
+			<label class="{tempSelectedGen.includes(gen) ? 'btn-selected' : ''} btn col-span-1 min-h-[44px]">
 				<input
 					type="checkbox"
 					checked={tempSelectedGen.includes(gen)}
@@ -57,10 +57,7 @@
 			Apply
 		</button>
 		<button
-			disabled={tempSelectedGen.length === 0}
-			class="flex-1 {tempSelectedGen.length === 0
-				? 'btn-disable'
-				: 'bg-red-500 text-white border-red-700'} btn"
+			class="btn min-h-[44px] bg-red-500 text-white border-red-700"
 			onclick={closeModal}
 		>
 			Close

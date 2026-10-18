@@ -33,6 +33,8 @@ bun run dev
 Run validation before shipping:
 
 ```bash
+node --test tests/*.test.js
+bun install --frozen-lockfile
 bun run check
 bun run build
 ```
@@ -41,9 +43,23 @@ You can preview the production build using `bun run preview`.
 
 ### Professor Oak's free Q&A
 
-Professor Oak displays exactly one answer at a time. The browser sends a single question directly to [Pokémo's shared Oak API](https://pokemo.pages.dev/api/oak), which answers known Pokédex facts and a few common evolution questions from local reference data. For unknown questions it honestly says it does not know. No Workers AI inference is called. No separate Gemini API key, chat history, vector database or user account is required.
+Professor Oak displays exactly one answer at a time. The browser sends a single question directly to [Pokémo's shared Oak API](https://pokemo.pages.dev/api/oak), which answers familiar Pokédex facts locally and asks Cloudflare's free-tier Gemma AI for less exact Pokémon questions, if the daily free quota remains. It does not keep a chat thread. No separate Gemini API key, chat history, vector database or user account is required.
 
-**AI inference cost: $0 by design.** The shared Pokémo endpoint has no Workers AI binding or model invocation, and a regression test prevents these from being silently reintroduced. Standard Cloudflare Pages Functions requests are still subject to the Cloudflare account's hosting plan and included quotas.
+**Free-tier condition:** On **Cloudflare Workers Free**, the 10,000-Neurons/day allowance has a hard cutoff; inference stops rather than generating AI overage charges. If the account upgrades to Workers Paid, requests beyond the free allowance can become billable. The shared endpoint caps response length, throttles requests per isolate, never retries with a paid provider, and falls back to local Pokédex answers when AI is unavailable. Standard Cloudflare Pages hosting remains subject to your plan and traffic.
+
+## Mobile and browser regression checks
+
+The game has a naturally scrolling mobile layout, responsive game stage and two-column answer buttons that remain usable on short phones. Before the answer is revealed, the Pokémon is rendered using a CSS silhouette mask rather than a previewable color image, preventing casual native long-press image previews. The choices are sampled without replacement, so there are always three different names. It is not designed to prevent a determined player using browser developer tools to identify the Pokémon.
+
+Run the Node regression suite with `node --test tests/*.test.js`. A separate manual Playwright suite validates real browser layouts and interactions:
+
+```bash
+python -m pip install playwright
+python -m playwright install chromium
+BASE_URL=https://whos-that-pokemon-7iu.pages.dev python tests/mobile_playwright.py
+```
+
+Supply a Cloudflare preview URL as `BASE_URL` when testing an unreleased build. This browser suite is **not** part of GitHub Actions; Cloudflare Pages performs dependency, test, check, and build validation.
 
 ## Cloudflare Pages deployment
 
@@ -52,7 +68,7 @@ The project uses `@sveltejs/adapter-cloudflare` and a Git-connected Cloudflare P
 | Setting | Value |
 | --- | --- |
 | Cloudflare Pages URL | `https://whos-that-pokemon-7iu.pages.dev` |
-| Build command | `bun install --frozen-lockfile && bun run check && bun run build` |
+| Build command | `node --test tests/*.test.js && bun install --frozen-lockfile && bun run check && bun run build` |
 | Output directory | `.svelte-kit/cloudflare` |
 | Bun version | `1.4.3` via Cloudflare `BUN_VERSION` |
 | Node version | `22.17.0` via `.node-version` and Cloudflare `NODE_VERSION` |
@@ -72,7 +88,7 @@ The repository contains a text-based `bun.lock` originally generated before the 
 
 - The standalone game includes Pokémon generations I–VIII; generation IX+ is not yet included in this repository.
 - Pokémon sprites depend on external Pokémon asset sources.
-- Professor Oak requires the shared Pokémo endpoint to be available; questions outside its offline knowledge return an uncertainty answer. No external AI model or API key is used.
+- Professor Oak needs the shared Pokémo endpoint; flexible questions also depend on Workers AI's free allowance. When inference is unavailable, it returns an offline answer or a clear limitation message.
 - The Cloudflare deployment has not replaced or deleted the Vercel project, and no domain redirects have been configured.
 
 ## Disclaimer

@@ -3,7 +3,7 @@
 	import { gameState } from '../state.svelte.js';
 </script>
 
-<header class="h-28 sm:h-36 lg:h-28 px-4 relative overflow-hidden header">
+<header class="h-20 shrink-0 sm:h-28 lg:h-28 px-3 relative header">
 	{#if (gameState.pokemon && gameState.hidePokemon) || (!gameState.pokemon && gameState.numOfQuestions === 0)}
 		<h1 in:scale={{ delay: 400 }} out:scale>Who's That Pokemon?</h1>
 	{:else if !gameState.pokemon && gameState.numOfQuestions !== 0}

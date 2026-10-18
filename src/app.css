@@ -17,7 +17,7 @@
 
 @layer components {
 	.btn {
-		@apply bg-neutral-200 border-b-neutral-400 font-pixel select-none text-center capitalize rounded-lg outline outline-black outline-[3px] hover:brightness-110 active:translate-y-1 border-b-8 pt-2 pb-1 px-4 sm:text-lg sm:pt-3 sm:pb-2;
+		@apply min-h-[48px] min-w-0 break-words bg-neutral-200 border-b-neutral-400 font-pixel select-none text-center capitalize rounded-lg outline outline-black outline-[3px] hover:brightness-110 active:translate-y-1 border-b-4 px-2 py-2 text-xs leading-snug sm:border-b-8 sm:px-4 sm:py-3 sm:text-lg;
 	}
 	.btn-disable {
 		@apply brightness-90 text-black/50 cursor-not-allowed hover:brightness-90 active:translate-y-0;
@@ -32,6 +32,6 @@
 		@apply bg-rose-500 border-b-rose-700 text-white;
 	}
 	.header {
-		@apply h-full w-full grid place-items-center font-pokemon capitalize text-yellow-400 text-5xl [-webkit-text-stroke:3px_#0369a1] [text-shadow:-5px_5px_#171717] sm:text-7xl sm:[text-shadow:-6px_6px_#171717];
+		@apply w-full grid place-items-center font-pokemon capitalize text-yellow-400 text-3xl [-webkit-text-stroke:2px_#0369a1] [text-shadow:-3px_3px_#171717] sm:text-5xl sm:[-webkit-text-stroke:3px_#0369a1] sm:[text-shadow:-5px_5px_#171717];
 	}
 }

@@ -32,14 +32,14 @@
 	}
 </script>
 
-<section class="container grid sm:grid-cols-2 gap-4 px-4">
+<section class="mx-auto grid w-full max-w-3xl grid-cols-2 gap-2 px-3 sm:gap-4 sm:px-4">
 	{#if !gameState.pokemon}
-		<button onclick={play} class="btn bg-emerald-500 border-b-emerald-700 text-white">
+		<button onclick={play} class="btn min-h-[48px] min-w-0 break-words bg-emerald-500 border-b-emerald-700 text-white">
 			{gameState.numOfQuestions === 0 ? 'Play' : 'Play Again'}
 		</button>
 		<button
 			onclick={() => (gameState.showSelectGenerations = true)}
-			class="btn bg-pink-500 border-b-pink-700 text-white"
+			class="btn min-h-[48px] min-w-0 break-words bg-pink-500 border-b-pink-700 text-white"
 		>
 			Select Gen
 		</button>
@@ -47,7 +47,7 @@
 		{#each gameState.choices as choice}
 			<button
 				onclick={() => checkAnswer(choice)}
-				class="btn {choice === rightAnswer ? 'btn-correct' : ''} {choice === wrongAnswer
+				class="btn min-h-[48px] min-w-0 break-words {choice === rightAnswer ? 'btn-correct' : ''} {choice === wrongAnswer
 					? 'btn-wrong'
 					: ''}"
 				class:btn-disable={!gameState.hidePokemon}
@@ -57,9 +57,9 @@
 			</button>
 		{/each}
 		{#if gameState.hidePokemon}
-			<button onclick={quit} class="btn bg-sky-500 border-sky-700 text-white"> Quit </button>
+			<button onclick={quit} class="btn min-h-[48px] min-w-0 break-words bg-sky-500 border-sky-700 text-white"> Quit </button>
 		{:else}
-			<button onclick={getRandomPokemon} class="btn bg-sky-500 border-sky-700 text-white">
+			<button onclick={getRandomPokemon} class="btn min-h-[48px] min-w-0 break-words bg-sky-500 border-sky-700 text-white">
 				Next
 			</button>
 		{/if}
