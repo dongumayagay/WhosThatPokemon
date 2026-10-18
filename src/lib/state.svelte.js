@@ -15,10 +15,8 @@ export const gameState = $state({
 	choices: /** @type {string[]} */ ([]),
 	numOfQuestions: 0,
 	numOfRightAnswer: 0,
-	// Professor Oak Chat State
-	showProfessorOak: false,
-	chatMessages: /** @type {{ role: string; content: string }[]} */ ([]),
-	isChatLoading: false
+	// Single-question Professor Oak overlay (no message thread)
+	showProfessorOak: false
 });
 
 // Reset game function
