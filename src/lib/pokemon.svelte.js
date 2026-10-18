@@ -1,12 +1,13 @@
 import { pokemonNames } from './pokemonNames.json';
 import { gameState, maxPokemonPerGeneration, totalPokemon } from './state.svelte.js';
+import { createChoiceIds } from './choice-options.js';
 
 export function getRandomPokemon() {
 	gameState.hidePokemon = true;
 	const randomId = gameState.pokemonId;
-	const names = getNames(randomId);
-	gameState.pokemon = { id: randomId, name: names[0] };
-	gameState.choices = shuffleChoices(names);
+	const name = getName(randomId);
+	gameState.pokemon = { id: randomId, name };
+	gameState.choices = createChoiceIds(randomId, totalPokemon).map(getName);
 }
 
 /** @param {number} id */
@@ -44,13 +45,3 @@ function getOffset(index) {
 	return offset;
 }
 
-/** @param {number} id */
-function getNames(id) {
-	const choiceId = [id, getRandomPokemonId(), getRandomPokemonId()];
-	return choiceId.map((tempId) => getName(tempId));
-}
-
-/** @param {string[]} names */
-function shuffleChoices(names) {
-	return [...names].sort(() => 0.5 - Math.random());
-}
