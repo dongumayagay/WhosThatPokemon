@@ -103,7 +103,7 @@
 		>
 			{#if gameState.numOfQuestions === 0}
 				<h1
-					class="font-pokemon capitalize text-yellow-400 text-[250px] sm:text-[350px] lg:text-[450px] [-webkit-text-stroke:5px_#0369a1;] [text-shadow:-7px_7px_#171717;] sm:[-webkit-text-stroke:7px_#0369a1;] sm:[text-shadow:-10px_10px_#171717;] lg:[-webkit-text-stroke:9px_#0369a1;] lg:[text-shadow:-12px_12px_#171717;]"
+					class="font-pokemon capitalize text-yellow-400 text-[clamp(100px,25dvh,195px)] sm:text-[clamp(220px,36dvh,340px)] lg:text-[420px] [-webkit-text-stroke:5px_#0369a1;] [text-shadow:-7px_7px_#171717;] sm:[-webkit-text-stroke:7px_#0369a1;] sm:[text-shadow:-10px_10px_#171717;] lg:[-webkit-text-stroke:9px_#0369a1;] lg:[text-shadow:-12px_12px_#171717;]"
 				>
 					?
 				</h1>
