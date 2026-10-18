@@ -41,9 +41,9 @@ You can preview the production build using `bun run preview`.
 
 ### Professor Oak's free Q&A
 
-Professor Oak displays exactly one answer at a time. The browser sends a single question directly to [Pokémo's shared Oak API](https://pokemo.pages.dev/api/oak), which returns verified Pokédex facts where possible and uses Cloudflare Workers AI for more general Pokémon questions. No separate Gemini API key, chat history, vector database or user account is required.
+Professor Oak displays exactly one answer at a time. The browser sends a single question directly to [Pokémo's shared Oak API](https://pokemo.pages.dev/api/oak), which answers known Pokédex facts and a few common evolution questions from local reference data. For unknown questions it honestly says it does not know. No Workers AI inference is called. No separate Gemini API key, chat history, vector database or user account is required.
 
-The two websites share a server-side AI allowance. Cloudflare Workers AI has a free daily allocation, but **usage on paid Cloudflare accounts may be billable beyond it**. Server-side throttling is best effort rather than a guaranteed account-level spending cap.
+**AI inference cost: $0 by design.** The shared Pokémo endpoint has no Workers AI binding or model invocation, and a regression test prevents these from being silently reintroduced. Standard Cloudflare Pages Functions requests are still subject to the Cloudflare account's hosting plan and included quotas.
 
 ## Cloudflare Pages deployment
 
@@ -72,7 +72,7 @@ The repository contains a text-based `bun.lock` originally generated before the 
 
 - The standalone game includes Pokémon generations I–VIII; generation IX+ is not yet included in this repository.
 - Pokémon sprites depend on external Pokémon asset sources.
-- Professor Oak requires the shared Pokémo endpoint to be available; questions outside the stored facts also depend on free-tier Workers AI availability.
+- Professor Oak requires the shared Pokémo endpoint to be available; questions outside its offline knowledge return an uncertainty answer. No external AI model or API key is used.
 - The Cloudflare deployment has not replaced or deleted the Vercel project, and no domain redirects have been configured.
 
 ## Disclaimer
