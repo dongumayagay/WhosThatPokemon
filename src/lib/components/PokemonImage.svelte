@@ -29,7 +29,6 @@
 	let ctx = $state(/** @type {CanvasRenderingContext2D | null} */ (null));
 	let halfWidth = $state(0);
 	let halfHeight = $state(0);
-	let resize = $state(false);
 
 	function setupCanvas() {
 		if (!canvas) return;
@@ -48,7 +47,6 @@
 	});
 
 	function handleResize() {
-		resize = !resize;
 		setupCanvas();
 	}
 
@@ -70,23 +68,31 @@
 
 <svelte:window onresize={handleResize} />
 
-<section class="container aspect-square sm:aspect-video lg:aspect-[2/1] overflow-hidden">
+<section class="pokemon-stage mx-auto w-full overflow-hidden">
 	{#if gameState.pokemon}
 		{#key gameState.pokemon.id}
-			<div in:scale={{ delay: 400 }} out:scale class="block h-full relative aspect-square mx-auto">
-				{#key resize}
-					<div bind:clientWidth={width} bind:clientHeight={height} class="w-full h-full">
+			<div in:scale={{ delay: 250 }} out:scale class="relative mx-auto h-full aspect-square">
+				<div bind:clientWidth={width} bind:clientHeight={height} class="relative h-full w-full">
+					<canvas bind:this={canvas} aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
+					{#if gameState.hidePokemon}
+						<div
+							class="pokemon-silhouette absolute inset-0 z-10"
+							role="img"
+							aria-label="Mystery Pokémon silhouette"
+							style={'--pokemon-mask: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+gameState.pokemon.id+'.png")'}
+							oncontextmenu={(event) => event.preventDefault()}
+						></div>
+					{:else}
 						<img
 							draggable="false"
-							src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${gameState.pokemon.id}.png`}
+							src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+gameState.pokemon.id+'.png'}
 							style="image-rendering: pixelated;"
-							alt="pokemon"
-							class="block mx-auto absolute h-full aspect-square transition duration-1000 select-none pointer-events-none"
-							class:brightness-0={gameState.hidePokemon}
+							alt={'Revealed Pokémon: '+gameState.pokemon.name}
+							oncontextmenu={(event) => event.preventDefault()}
+							class="pointer-events-none absolute inset-0 z-10 h-full w-full select-none object-contain"
 						/>
-						<canvas bind:this={canvas} class=""></canvas>
-					</div>
-				{/key}
+					{/if}
+				</div>
 			</div>
 		{/key}
 	{:else}
@@ -118,3 +124,33 @@
 		</div>
 	{/if}
 </section>
+
+<style>
+  .pokemon-stage {
+    height: clamp(180px, 32dvh, 285px);
+    max-width: min(100%, 360px);
+    -webkit-touch-callout: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  .pokemon-silhouette {
+    background: #111827;
+    -webkit-mask-image: var(--pokemon-mask);
+    mask-image: var(--pokemon-mask);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-touch-callout: none;
+    user-select: none;
+    pointer-events: none;
+  }
+  @media (min-width: 640px) {
+    .pokemon-stage {
+      height: clamp(260px, 46dvh, 450px);
+      max-width: 700px;
+    }
+  }
+</style>
