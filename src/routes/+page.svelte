@@ -6,13 +6,9 @@
 	import PokemonImage from '$lib/components/PokemonImage.svelte';
 	import SelectGenerations from '$lib/components/SelectGenerations.svelte';
 	import ProfessorOak from '$lib/components/ProfessorOak.svelte';
-	import { onMount } from 'svelte';
 
 	selectRandomPokemonIdFromGen();
 
-	onMount(() => {
-		setTimeout(() => window.scrollTo(0, 1), 0);
-	});
 </script>
 
 {#if gameState.showSelectGenerations}
@@ -26,7 +22,8 @@
 <!-- Ask Professor Oak Floating Button -->
 <button
 	onclick={() => (gameState.showProfessorOak = true)}
-	class="fixed bottom-4 right-4 z-20 bg-green-500 hover:bg-green-600 text-white font-pixel text-xs px-4 py-3 rounded-full shadow-lg border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all flex items-center gap-2 outline outline-black outline-2"
+	style="bottom: calc(0.75rem + env(safe-area-inset-bottom));"
+	class="fixed right-3 z-20 bg-green-500 hover:bg-green-600 text-white font-pixel text-xs px-4 py-3 rounded-full shadow-lg border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all flex items-center gap-2 outline outline-black outline-2"
 	aria-label="Ask Professor Oak"
 >
 	<span class="text-lg">🥼</span>
@@ -34,9 +31,10 @@
 </button>
 
 <div
-	class="h-screen bg-gradient-to-tr from-yellow-500 via-orange-500 to-red-500 scroll-smooth snap-y snap-mandatory overflow-y-auto"
+	class="min-h-dvh w-full bg-gradient-to-tr from-yellow-500 via-orange-500 to-red-500"
 >
-	<main class="container h-screen snap-center text-center flex flex-col justify-center">
+	<main class="mx-auto flex min-h-dvh w-full max-w-5xl flex-col items-stretch justify-start gap-3 px-3 pt-4 text-center sm:justify-center sm:gap-5 sm:pt-8"
+		style="padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));">
 		<Header />
 		<PokemonImage />
 		<Control />
