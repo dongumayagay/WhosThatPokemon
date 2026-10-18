@@ -36,3 +36,8 @@ test('generation picker and Oak dialog can scroll on short mobile screens',()=>{
  assert.match(gen,/overflow-y-auto/);
  assert.match(oak,/overflow-y-auto/);
 });
+
+test('start-screen question mark cannot exceed the mobile image stage height',()=>{
+ assert.match(image,/text-\[clamp\(80px,20dvh,160px\)\]/);
+ assert.match(image,/leading-none/);
+});
