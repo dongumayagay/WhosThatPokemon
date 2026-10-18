@@ -33,6 +33,8 @@ bun run dev
 Run validation before shipping:
 
 ```bash
+node --test tests/*.test.js
+bun install --frozen-lockfile
 bun run check
 bun run build
 ```
@@ -45,6 +47,20 @@ Professor Oak displays exactly one answer at a time. The browser sends a single 
 
 The two websites share a server-side AI allowance. Cloudflare Workers AI has a free daily allocation, but **usage on paid Cloudflare accounts may be billable beyond it**. Server-side throttling is best effort rather than a guaranteed account-level spending cap.
 
+## Mobile and browser regression checks
+
+The game has a naturally scrolling mobile layout, responsive game stage and two-column answer buttons that remain usable on short phones. Before the answer is revealed, the Pokémon is rendered using a CSS silhouette mask rather than a previewable color image, preventing casual native long-press image previews. The choices are sampled without replacement, so there are always three different names. It is not designed to prevent a determined player using browser developer tools to identify the Pokémon.
+
+Run the Node regression suite with `node --test tests/*.test.js`. A separate manual Playwright suite validates real browser layouts and interactions:
+
+```bash
+python -m pip install playwright
+python -m playwright install chromium
+BASE_URL=https://whos-that-pokemon-7iu.pages.dev python tests/mobile_playwright.py
+```
+
+Supply a Cloudflare preview URL as `BASE_URL` when testing an unreleased build. This browser suite is **not** part of GitHub Actions; Cloudflare Pages performs dependency, test, check, and build validation.
+
 ## Cloudflare Pages deployment
 
 The project uses `@sveltejs/adapter-cloudflare` and a Git-connected Cloudflare Pages project named **`whos-that-pokemon`**.
@@ -52,7 +68,7 @@ The project uses `@sveltejs/adapter-cloudflare` and a Git-connected Cloudflare P
 | Setting | Value |
 | --- | --- |
 | Cloudflare Pages URL | `https://whos-that-pokemon-7iu.pages.dev` |
-| Build command | `bun install --frozen-lockfile && bun run check && bun run build` |
+| Build command | `node --test tests/*.test.js && bun install --frozen-lockfile && bun run check && bun run build` |
 | Output directory | `.svelte-kit/cloudflare` |
 | Bun version | `1.4.3` via Cloudflare `BUN_VERSION` |
 | Node version | `22.17.0` via `.node-version` and Cloudflare `NODE_VERSION` |
