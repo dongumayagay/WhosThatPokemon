@@ -8,12 +8,15 @@ The previous Vercel URL, https://wtp.vercel.app, may continue serving the older 
 
 ## Features
 
+- Play **Daily Dex**, five shared Pokémon mysteries each UTC day. Everyone gets the same five unique silhouettes and four answer choices per question drawn from the correct Pokémon's generation. Today's completed puzzle cannot restart until the next UTC day (browser storage is not tamper-proof).
 - Play **Free Play** (unlimited rounds) or a **10-Round Challenge** with a clear finish line.
 - Build answer streaks for **100–200 points per correct answer**, with a personal-best Challenge score saved locally on your device.
-- Use one **50/50 hint per round** to remove a wrong option; hinted correct answers earn half points.
+- Use one **50/50 hint per round** to leave two answer choices (one eliminated in three-choice modes, two in Daily Dex); hinted correct answers earn half points.
 - Choose Pokémon generations **I–VIII** (898 Pokémon). Encounters do not repeat until the selected pool is exhausted, and wrong choices come from the selected generations.
-- See live round progress, score, streak, results, and immediate correct/wrong feedback.
-- Press **1**, **2**, or **3** to guess, then **Enter** to continue, or use touch-friendly buttons.
+- See live round progress, score, streak, results, Trainer ranks and immediate correct/wrong feedback.
+- Daily Dex progress automatically saves on your device so you can resume after refreshing, and you can **share a spoiler-free color-grid result** (green = correct, yellow = correct with hint, dark = missed).
+- No timers, social accounts, paid APIs or extra dependencies for the game.
+- Press **1**–**3** (or **1**–**4** in Daily Dex) to guess, then **Enter** to continue, or use touch-friendly buttons.
 - Open **Professor Oak** for one Pokémon question and one speech-bubble answer, without any chat thread or API key.
 
 For a broader Pokédex, team builder, and a newer guessing-game implementation, see the separate [Pokémo](https://github.com/dongumayagay/pokemo) project and its [live site](https://pokemo.pages.dev).

@@ -34,11 +34,25 @@ export function createChoiceIds(correctId, total, random = Math.random) {
  * @param {number[]} availableIds
  * @param {() => number} [random]
  */
-export function createChoiceIdsFromPool(correctId, availableIds, random = Math.random) {
+export function createChoiceIdsFromPool(correctId, availableIds, random = Math.random, count = 3) {
   const uniqueIds = [...new Set(availableIds)];
   const correctIndex = uniqueIds.indexOf(correctId);
-  if (correctIndex === -1 || uniqueIds.length < 3) {
-    throw new RangeError('At least three eligible Pokémon, including the answer, are required.');
+  if (correctIndex === -1 || !Number.isInteger(count) || count < 2 || uniqueIds.length < count) {
+    throw new RangeError('Not enough eligible Pokémon, including the answer, for the requested options.');
   }
-  return createChoiceIds(correctIndex + 1, uniqueIds.length, random).map((index) => uniqueIds[index - 1]);
+  if (count === 3) {
+    return createChoiceIds(correctIndex + 1, uniqueIds.length, random).map((index) => uniqueIds[index - 1]);
+  }
+  const alternatives = uniqueIds.filter((id) => id !== correctId);
+  const chosen = [correctId];
+  for (let i = 0; i < count - 1; i++) {
+    const j = i + Math.min(alternatives.length - i - 1, Math.max(0, Math.floor(random() * (alternatives.length - i))));
+    [alternatives[i], alternatives[j]] = [alternatives[j], alternatives[i]];
+    chosen.push(alternatives[i]);
+  }
+  for (let i = chosen.length - 1; i > 0; i--) {
+    const j = Math.min(i, Math.max(0, Math.floor(random() * (i + 1))));
+    [chosen[i], chosen[j]] = [chosen[j], chosen[i]];
+  }
+  return chosen;
 }

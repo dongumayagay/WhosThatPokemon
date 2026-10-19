@@ -10,7 +10,7 @@ export const gameState = $state({
   selectedGenerations: /** @type {number[]} */ ([1]),
   showSelectGenerations: false,
   choices: /** @type {string[]} */ ([]),
-  mode: /** @type {'classic' | 'challenge'} */ ('classic'),
+  mode: /** @type {'classic' | 'challenge' | 'daily'} */ ('classic'),
   numOfQuestions: 0,
   numOfRightAnswer: 0,
   points: 0,
@@ -20,9 +20,14 @@ export const gameState = $state({
   lastAnswer: /** @type {string | null} */ (null),
   hintUsed: false,
   eliminatedChoice: /** @type {string | null} */ (null),
+  eliminatedChoices: /** @type {string[]} */ ([]),
   usedPokemonIds: /** @type {number[]} */ ([]),
   completed: false,
   bestChallengeScore: 0,
+  dailyDate: '',
+  dailyDeck: /** @type {Array<{id:number, choices:number[]}>} */ ([]),
+  dailyGuesses: /** @type {Array<{choice:string,hintUsed:boolean}>} */ ([]),
+  dailyStatus: /** @type {{date:string,guesses:Array<{choice:string,hintUsed:boolean}>,marks:string[],correct:number,streak:number,bestStreak:number,points:number,completed:boolean} | null} */ (null),
   showProfessorOak: false
 });
 
@@ -41,5 +46,9 @@ export function resetGame() {
   gameState.lastPoints = 0;
   gameState.hintUsed = false;
   gameState.eliminatedChoice = null;
+  gameState.eliminatedChoices = [];
   gameState.completed = false;
+  gameState.dailyDate = '';
+  gameState.dailyDeck = [];
+  gameState.dailyGuesses = [];
 }

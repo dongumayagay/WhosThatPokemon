@@ -1,5 +1,6 @@
 /** A short run with a clear finish line; free play is still unlimited. */
 export const CHALLENGE_LENGTH = 10;
+export const DAILY_LENGTH = 5;
 
 /**
  * Return the national Pokédex IDs for the selected generations.
@@ -48,6 +49,17 @@ export function chooseEliminatedChoice(choices, correctName, random = Math.rando
   return wrong[Math.min(wrong.length - 1, Math.max(0, Math.floor(random() * wrong.length)))];
 }
 
+/** Eliminate wrong answers until exactly two choices remain. */
+export function chooseEliminatedChoices(choices, correctName, random = Math.random) {
+  const wrong = [...new Set(choices.filter((choice) => choice !== correctName))];
+  const disabled = [];
+  while (wrong.length > 1) {
+    const j = Math.min(wrong.length - 1, Math.max(0, Math.floor(random() * wrong.length)));
+    disabled.push(wrong.splice(j, 1)[0]);
+  }
+  return disabled;
+}
+
 /**
  * Resolve a single guess without mutating the input state.
  * Returning null makes double-submission and disabled hints harmless.
@@ -57,7 +69,7 @@ export function chooseEliminatedChoice(choices, correctName, random = Math.rando
 export function resolveAnswer(state, answer) {
   if (
     !state.pokemon || !state.hidePokemon || !state.choices.includes(answer) ||
-    state.eliminatedChoice === answer
+    state.eliminatedChoice === answer || state.eliminatedChoices?.includes(answer)
   ) return null;
   const correct = answer === state.pokemon.name;
   const streak = correct ? state.streak + 1 : 0;
@@ -72,6 +84,7 @@ export function resolveAnswer(state, answer) {
     bestStreak: Math.max(state.bestStreak, streak),
     lastPoints,
     points: state.points + lastPoints,
-    completed: state.mode === 'challenge' && numOfQuestions >= CHALLENGE_LENGTH
+    completed: (state.mode === 'challenge' && numOfQuestions >= CHALLENGE_LENGTH) ||
+      (state.mode === 'daily' && numOfQuestions >= DAILY_LENGTH)
   };
 }

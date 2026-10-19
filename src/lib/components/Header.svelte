@@ -7,7 +7,7 @@
   {#if (gameState.pokemon && gameState.hidePokemon) || (!gameState.pokemon && gameState.numOfQuestions === 0)}
     <h1 in:scale={{ delay: 200 }} out:scale>Who's That Pokemon?</h1>
   {:else if !gameState.pokemon}
-    <h1 in:scale={{ delay: 200 }} out:scale>{gameState.completed ? 'Challenge Complete!' : 'Your Score'}</h1>
+    <h1 in:scale={{ delay: 200 }} out:scale>{gameState.mode === 'daily' && gameState.completed ? 'Daily Dex Complete!' : gameState.completed ? 'Challenge Complete!' : 'Your Score'}</h1>
   {:else}
     <h1 in:scale={{ delay: 200 }} out:scale>It's {gameState.pokemon.name}!</h1>
   {/if}
