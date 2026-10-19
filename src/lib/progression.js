@@ -15,7 +15,7 @@ export const ACHIEVEMENTS=[
 /** @type {string[]} */
 const achievementIds=ACHIEVEMENTS.map(a=>a.id);
 const gymIds=GYMS.map(x=>x.id);
-/** @returns {{discovered:number[],totalAnswered:number,totalCorrect:number,badges:string[],achievements:string[]}} */
+/** @param {any} data @returns {{discovered:number[],totalAnswered:number,totalCorrect:number,badges:string[],achievements:string[]}} */
 export function sanitizeProfile(data) {
   const x=data && typeof data==='object' && !Array.isArray(data)?data:{};
   const v=/** @type {Record<string,any>} */(x);
@@ -36,6 +36,7 @@ export function recordGuess(raw,id,correct,streak) {
       p.discovered.push(id); p.discovered.sort((a,b)=>a-b);
     }
   }
+  /** @param {string} id */
   const award=(id)=>{if(!p.achievements.includes(id))p.achievements.push(id);};
   if(p.discovered.length>=1)award('first');
   if(p.discovered.length>=10)award('discover10');

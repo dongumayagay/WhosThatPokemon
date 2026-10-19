@@ -48,6 +48,7 @@ export function createDifficultyChoices(correctId,availableIds,generationCounts,
   if(difficulty==='normal') {
     eligible.sort((a,b)=>Number(generationOf(b,generationCounts)===generation)-Number(generationOf(a,generationCounts)===generation));
   } else if(difficulty==='expert') {
+    /** @param {number} x */
     const grade=(x)=> (sameFamily.includes(x)?-2000:0) + (generationOf(x,generationCounts)===generation?-500:0) + Math.abs(x-correctId);
     eligible.sort((a,b)=>grade(a)-grade(b));
   }

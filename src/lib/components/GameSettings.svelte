@@ -6,7 +6,7 @@
 </script>
 <svelte:window onkeydown={closeWithEscape}/>
 <div class="overlay-backdrop">
-  <section class="game-dialog settings-dialog" role="dialog" aria-modal="true" aria-label="Game settings">
+  <div class="game-dialog settings-dialog" role="dialog" aria-modal="true" aria-label="Game settings">
     <div class="dialog-head">
       <div><p class="eyebrow">PREFERENCES</p><h2>Game settings</h2></div>
       <button class="icon-button close-button" onclick={()=>gameState.showSettings=false} aria-label="Close settings">✕</button>
@@ -19,5 +19,5 @@
       <span><strong>Reveal animations</strong><small>Reduced motion system setting is always respected</small></span><span class="switch" class:enabled={gameState.animationEnabled}>{gameState.animationEnabled?'ON':'OFF'}</span>
     </button>
     <p class="setting-note">Both settings are optional. The game remains fully playable with either disabled.</p>
-  </section>
+  </div>
 </div>

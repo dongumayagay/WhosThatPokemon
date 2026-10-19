@@ -21,7 +21,7 @@ test('Eight themed Gym Trials each contain five unique valid opponents', () => {
 
 test('Difficulty scales answer count and never leaks Pokémon from outside the pool', () => {
   const pool = [22,25,26,30,34,35,37,38,39,40,133,134,135,136];
-  for (const level of ['easy','normal','expert']) {
+  for (const level of /** @type {Array<'easy'|'normal'|'expert'>} */(['easy','normal','expert'])) {
     const selected = createDifficultyChoices(25, pool, counts, level, () => 0.42);
     assert.equal(selected.length, level === 'easy' ? 3 : 4);
     assert.equal(new Set(selected).size, selected.length);

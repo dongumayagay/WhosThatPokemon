@@ -14,7 +14,7 @@
 </script>
 <svelte:window onkeydown={closeOnEscape}/>
 <div class="overlay-backdrop">
-  <section class="game-dialog dex-dialog" role="dialog" aria-modal="true" aria-label="Personal Pokédex">
+  <div class="game-dialog dex-dialog" role="dialog" aria-modal="true" aria-label="Personal Pokédex">
     <div class="dialog-head">
       <div><p class="eyebrow">YOUR JOURNEY</p><h2>Trainer Pokédex</h2><p class="muted-text">{gameState.profile.discovered.length} / 898 species discovered</p></div>
       <button class="icon-button close-button" onclick={()=>gameState.showPokedex=false} aria-label="Close Pokédex">✕</button>
@@ -65,5 +65,5 @@
       </div>
     {/if}
     <p class="setting-note">Progress is stored in this browser only. Clearing site data also clears your Pokédex.</p>
-  </section>
+  </div>
 </div>
