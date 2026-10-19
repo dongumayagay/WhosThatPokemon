@@ -968,3 +968,15 @@ html, body { background: #f05544; }
 [data-motion='off']::before {
   animation: none !important;
 }
+/* Wide displays get one simple answer strip below the broadcast frame. */
+@media (min-width: 850px) {
+  .anime-answers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .answer-option.anime-option {
+    gap: 8px;
+    padding: 9px;
+    font-size: clamp(13px, 1.15vw, 16px);
+  }
+  .wtp-controls { padding-top: 10px; }
+}

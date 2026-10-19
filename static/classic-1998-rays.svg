@@ -8,8 +8,9 @@
     <stop offset="1" stop-color="#46b1c6" stop-opacity="0"/>
   </radialGradient>
   <linearGradient id="edgeFade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="365" y2="0">
-    <stop offset="0" stop-color="#ffffff"/><stop offset=".43" stop-color="#ffffff"/>
-    <stop offset=".68" stop-color="#b7b7b7"/><stop offset="1" stop-color="#000000"/>
+    <stop offset="0" stop-color="#ffffff"/><stop offset=".25" stop-color="#ffffff"/>
+    <stop offset=".65" stop-color="#666666"/><stop offset=".85" stop-color="#000000"/>
+    <stop offset="1" stop-color="#000000"/>
   </linearGradient>
   <mask id="aquaFade" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="480"><rect width="640" height="480" fill="url(#edgeFade)"/></mask>
   <clipPath id="aquaClip">
