@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { loadGamePreferences } from '$lib/pokemon.svelte.js';
+  import { loadGamePreferences, startGame } from '$lib/pokemon.svelte.js';
   import { gameState } from '$lib/state.svelte.js';
   import Control from '$lib/components/Control.svelte';
   import PokemonImage from '$lib/components/PokemonImage.svelte';
@@ -9,7 +9,7 @@
   import Pokedex from '$lib/components/Pokedex.svelte';
   import GameSettings from '$lib/components/GameSettings.svelte';
 
-  onMount(loadGamePreferences);
+  onMount(() => { loadGamePreferences(); startGame('classic'); });
 </script>
 
 <svelte:head>

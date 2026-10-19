@@ -9,10 +9,11 @@ SIZES = [(320,568),(390,844),(768,1024),(1280,800)]
 def run_viewport(browser, width, height):
     page = browser.new_page(viewport={'width':width,'height':height},is_mobile=width<640,has_touch=width<640)
     page.goto(BASE,wait_until='domcontentloaded',timeout=30000)
-    expect(page.get_by_role('button',name='Start guessing')).to_be_visible(timeout=20000)
+    expect(page.locator('.mystery-silhouette')).to_be_visible(timeout=25000)
     stage = page.locator('.anime-stage')
     expect(stage).to_be_visible()
-    expect(page.locator('.anime-burst polygon')).to_have_count(2)
+    expect(page.locator('.anime-burst')).to_be_visible()
+    expect(page.locator('.anime-logo')).to_have_text('Pokémon')
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'), f'Home overflows at {width}'
     ratio = stage.evaluate('(e) => e.clientWidth/e.clientHeight')
     assert abs(ratio - 4/3) < 0.07, f'Expected 4:3 mystery screen, got {ratio} at {width}'
@@ -30,7 +31,7 @@ def run_viewport(browser, width, height):
     expect(page.get_by_role('dialog',name='Game settings')).to_be_visible()
     page.get_by_role('button',name='Close settings').click()
 
-    page.get_by_role('button',name='Start guessing').click()
+    # Free Play begins immediately with the classic silhouette. No intro card.
     expect(page.locator('.mystery-silhouette')).to_be_visible(timeout=25000)
     expect(page.locator('.anime-question')).to_be_visible()
     expect(page.locator('.revealed-sprite')).to_have_count(0)

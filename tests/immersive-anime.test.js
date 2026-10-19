@@ -9,13 +9,19 @@ const state=readFileSync('src/lib/state.svelte.js','utf8');
 const styles=readFileSync('src/app.css','utf8');
 
 test('single immersive 4:3 interstitial with animated vector starburst and speed lines',()=>{
-  assert.match(stage,/<svg\s+class="anime-burst"/);
-  assert.match(stage,/<polygon/);
+  assert.match(stage,/class="anime-burst"/);
+  const rays=readFileSync('static/classic-1998-rays.svg','utf8');
+  assert.match(rays,/id="aquaClip"/);
+  assert.match(rays,/id="burst"/);
+  assert.match(rays,/polygon/);
   assert.match(stage,/class="anime-speedlines"/);
   assert.match(stage,/class="anime-question"/);
+  assert.match(stage,/class="anime-logo"/);
+  assert.doesNotMatch(stage,/<Header\s*\/>/);
+  assert.match(page,/startGame\('classic'\)/);
   assert.match(styles,/\.anime-stage\s*\{[^}]*aspect-ratio:\s*4\s*\/\s*3/s);
-  assert.match(styles,/@keyframes\s+anime-rays/);
-  assert.match(styles,/@keyframes\s+anime-burst/);
+  assert.match(styles,/@keyframes\s+vintage-red-streaks/);
+  assert.match(styles,/@keyframes\s+vintage-burst-breathe/);
   assert.match(styles,/@keyframes\s+anime-reveal/);
 });
 

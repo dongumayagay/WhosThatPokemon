@@ -1,6 +1,5 @@
 <script>
   import { gameState } from '../state.svelte.js';
-  import Header from './Header.svelte';
 
   let imageStatus = $state('idle');
   let retryKey = $state(0);
@@ -32,14 +31,9 @@
 
 <section class="anime-stage" aria-label="Who's That Pokémon? classic mystery screen"
   data-scene={gameState.pokemon ? (gameState.hidePokemon ? 'mystery' : 'reveal') : 'opening'}>
+  <div class="anime-burst" aria-hidden="true"></div>
   <div class="anime-speedlines" aria-hidden="true"></div>
   <div class="anime-grain" aria-hidden="true"></div>
-  <svg class="anime-burst" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-    <polygon class="anime-burst-outline" points="400.0,21.0 444.1,127.1 531.7,39.3 527.0,150.8 647.5,91.9 594.7,195.5 733.4,172.5 638.8,255.6 779.2,271.4 654.1,324.0 779.2,376.6 638.8,392.4 733.4,475.5 594.7,452.5 647.5,556.1 527.1,497.2 531.7,608.7 444.1,520.9 400.0,627.0 355.9,520.9 268.3,608.7 272.9,497.2 152.5,556.1 205.3,452.5 66.6,475.5 161.2,392.4 20.8,376.6 145.9,324.0 20.8,271.4 161.2,255.6 66.6,172.5 205.3,195.5 152.5,91.9 273.0,150.8 268.3,39.3 355.9,127.1" />
-    <polygon class="anime-burst-center" points="400.0,54.0 441.7,143.2 520.7,70.3 520.0,165.0 626.9,117.2 583.9,206.0 705.7,189.0 625.6,261.2 747.6,277.1 640.0,324.0 747.6,370.9 625.6,386.8 705.7,459.0 583.9,442.0 626.9,530.8 520.0,483.0 520.7,577.7 441.7,504.8 400.0,594.0 358.3,504.8 279.3,577.7 280.0,483.0 173.1,530.8 216.1,442.0 94.3,459.0 174.4,386.8 52.4,370.9 160.0,324.0 52.4,277.1 174.4,261.2 94.3,189.0 216.1,206.0 173.1,117.2 280.0,165.0 279.3,70.3 358.3,143.2" />
-  </svg>
-  <Header />
-
   {#if gameState.pokemon}
     {#if imageStatus === 'loading'}
       <p class="anime-loading" role="status">Getting the silhouette ready…</p>
@@ -55,7 +49,11 @@
           style={'--sprite-mask:url("' + spriteUrl + '")'}>
           <div class="mystery-silhouette"></div>
         </div>
-        <span class="anime-question" aria-hidden="true">?</span>
+        <svg class="anime-question" viewBox="0 0 150 240" aria-hidden="true" focusable="false">
+          <path d="M 31 31 Q 79 5 122 31 L 134 51 L 129 119 L 101 130 L 98 152 L 60 152 L 60 109 L 87 95 L 87 60 Q 73 51 56 61 L 56 83 L 19 75 L 19 47 Z"
+            fill="#ffd53d" stroke="#0d485b" stroke-width="11" stroke-linejoin="round"/>
+          <path d="M 65 178 L 104 175 L 106 215 L 68 218 Z" fill="#ffd53d" stroke="#0d485b" stroke-width="11" stroke-linejoin="round"/>
+        </svg>
       {:else}
         <div class="reveal-rings" aria-hidden="true"></div>
         <div class="reveal-flash" aria-hidden="true"></div>
@@ -75,4 +73,5 @@
   {:else}
     <span class="anime-opening-question" aria-hidden="true">?</span>
   {/if}
+  <div class="anime-logo" aria-hidden="true">Pokémon</div>
 </section>

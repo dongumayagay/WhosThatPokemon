@@ -607,3 +607,181 @@
   animation: none !important;
   transition: none !important;
 }
+
+
+/* 1998 ENGLISH-DUB COMPOSITION, REBUILT AS ORIGINAL VECTOR STREAKS.
+   Inspired by the television eyecatch, NOT a copied anime screenshot.
+   Cyan radial burst lives LEFT, red diagonal streaks RIGHT, the blue
+   silhouette leads, and the yellow ? + Pokémon wordmark sit at RIGHT. */
+.anime-stage {
+  border: none;
+  border-radius: 0;
+  background: #ef3049;
+  box-shadow: 0 8px 25px #4e2e2531;
+}
+.anime-burst {
+  z-index: 0;
+  inset: 0;
+  background: url('/classic-1998-rays.svg') center / 100% 100% no-repeat;
+  transform-origin: 24% 48%;
+  animation: vintage-burst-breathe 5.8s ease-in-out infinite;
+}
+.anime-speedlines {
+  z-index: 1;
+  inset: 0;
+  opacity: .19;
+  pointer-events: none;
+  clip-path: polygon(52% 0,100% 0,100% 100%,53% 100%);
+  background: repeating-linear-gradient(161deg, transparent 0 33px,#ffcfb4 34px 36px, transparent 38px 57px);
+  background-size: 135% 135%;
+  animation: vintage-red-streaks 9s linear infinite;
+}
+.anime-grain {
+  z-index: 2;
+  inset: 0;
+  opacity: .09;
+  background: radial-gradient(#124567a3 .65px, transparent 1.1px) 0 0 / 5px 5px;
+}
+.anime-headline { display:none; }
+.anime-logo {
+  z-index: 8;
+  bottom: 5.6%;
+  right: 8%;
+  width: 50%;
+  text-align: center;
+  color: #ffdc36;
+  font-family: 'pokemon', system-ui, sans-serif;
+  font-size: clamp(42px, 8vw, 88px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -.035em;
+  white-space: nowrap;
+  -webkit-text-stroke: clamp(2.5px,.55vw,5px) #064572;
+  paint-order: stroke fill;
+  text-shadow: 4px 5px 0 #082f55, 6px 8px 0 #09283d9c;
+  transform: rotate(-7deg);
+  pointer-events: none;
+  user-select: none;
+}
+.silhouette-holder {
+  z-index: 5;
+  top: 16%;
+  left: 2%;
+  width: 55%;
+  height: 57%;
+  filter: drop-shadow(3px 1px 0 #053853) drop-shadow(-2px 1px 0 #073c58)
+          drop-shadow(1px 3px 0 #0a3a60);
+  animation: classic-shadow-arrival .35s ease-out both;
+}
+.mystery-silhouette {
+  background: #086b9e;
+  -webkit-mask-size: 152%;
+  mask-size: 152%;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.anime-question {
+  z-index: 7;
+  top: 13.3%;
+  right: 16%;
+  width: 18%;
+  height: 44%;
+  overflow: visible;
+  transform: rotate(-5deg);
+  filter: drop-shadow(4px 5px 0 #08345b);
+  animation: classic-question-float 4s ease-in-out infinite;
+}
+.anime-opening-question { display: none; }
+.reveal-rings {
+  inset: 7% 42% 18% 0;
+  border: 5px solid #e8ffff9f;
+  opacity: 0;
+  animation: anime-ring .5s ease-out both;
+}
+.revealed-sprite {
+  top: 13%;
+  left: 2%;
+  width: 56%;
+  height: 60%;
+  object-fit: contain;
+  transform-origin: center;
+  animation: anime-reveal .65s cubic-bezier(.12,.75,.22,1.12) both;
+}
+.reveal-flash {animation-duration:.43s;}
+.anime-answer {
+  right: 13%;
+  top: 18%;
+  width: 32%;
+  gap: 1px;
+  transform: rotate(-4deg);
+  text-align: center;
+  animation: classic-answer-pop .42s .12s backwards;
+}
+.anime-answer span {
+  color: #ffd738;
+  font-family: 'pokemon',system-ui,sans-serif;
+  font-size: clamp(16px,3vw,29px);
+  -webkit-text-stroke: clamp(1px,.32vw,3px) #0a436b;
+  paint-order: stroke fill;
+  text-shadow: 2px 3px 0 #093961;
+}
+.anime-answer strong {
+  font-size: clamp(21px,4vw,45px);
+  color: #ffd738;
+  -webkit-text-stroke: clamp(1.5px,.4vw,4px) #074575;
+  text-shadow: 3px 4px 0 #092a53;
+}
+.anime-end-scene {
+  top: 26%;
+}
+@keyframes vintage-burst-breathe {
+  0%,100% { transform: scale(1); filter: saturate(1); }
+  50% { transform: scale(1.015); filter: saturate(1.06); }
+}
+@keyframes vintage-red-streaks {
+  from {background-position: 0 0; }
+  to {background-position: 100px 22px;}
+}
+@keyframes classic-shadow-arrival {
+  from {transform: translateX(-4%) scale(.94); opacity:0;}
+  to {transform: translateX(0) scale(1); opacity:1;}
+}
+@keyframes classic-question-float {
+  0%,100% {translate:0 0;}
+  50% {translate:0 -3px;}
+}
+@keyframes classic-answer-pop {
+  from {opacity:0;transform:scale(.8) translateY(5px) rotate(-5deg);}
+  to {opacity:1;transform:scale(1) translateY(0) rotate(-4deg);}
+}
+@media (max-width:650px) {
+  .anime-logo {
+    right: 7%;
+    bottom: 5%;
+    font-size: clamp(28px,9.5vw,61px);
+    -webkit-text-stroke: 2.5px #064572;
+    text-shadow: 2px 3px 0 #082f55,3px 5px 0 #09283d9c;
+  }
+  .silhouette-holder {top:17%;left:1%;width:56%;height:57%;}
+  .mystery-silhouette {-webkit-mask-size:150%;mask-size:150%;}
+  .anime-question {right:14%;top:13%;width:19%;height:46%;filter:drop-shadow(2px 3px 0 #08345b);}
+  .anime-answer {top:19%;right:10%;width:34%;}
+  .anime-answer strong {font-size:clamp(16px,4.9vw,31px);}
+  .revealed-sprite {top:16%;left:0%;width:58%;height:59%;}
+}
+@media (max-width:400px) {
+  .anime-logo {font-size:clamp(27px,9.8vw,41px);right:8%;bottom:6%;}
+  .anime-question {right:13%;top:12%;width:22%;height:48%;}
+  .silhouette-holder {left:0%;top:17%;width:57%;height:59%;}
+  .mystery-silhouette {-webkit-mask-size:159%;mask-size:159%;}
+  .anime-answer {right:10%;top:18%;width:37%;}
+  .anime-answer strong {font-size:clamp(14px,4.6vw,20px);}
+}
+@media (prefers-reduced-motion:reduce) {
+  .anime-burst,.anime-speedlines,.anime-question,.silhouette-holder,.anime-answer {animation:none!important;}
+}
+[data-motion='off'] .anime-burst,
+[data-motion='off'] .anime-speedlines,
+[data-motion='off'] .anime-question,
+[data-motion='off'] .silhouette-holder,
+[data-motion='off'] .anime-answer {animation:none!important;}
