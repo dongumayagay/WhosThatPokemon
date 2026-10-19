@@ -160,4 +160,41 @@ export function answerPokemon(choice) {
       try {if(typeof localStorage!=='undefined')localStorage.setItem(BEST_SCORE_KEY,String(gameState.points));}catch{}
     }
   }
-  if(gameState.mode==='gym'&&gameSta --- TRUNCATED --- 8,743 chars
+  if(gameState.mode==='gym'&&gameState.completed) {
+    gameState.profile=awardGymBadge(gameState.profile,gameState.gymId,gameState.numOfRightAnswer);
+  }
+  gameState.newAwards=[...gameState.profile.achievements.filter(id=>!previousAchievements.has(id)),...gameState.profile.badges.filter(id=>!previousBadges.has(id)).map(id=>'badge:'+id)];
+  saveProfile();
+}
+
+export function useHint() {
+  if(!gameState.pokemon||!gameState.hidePokemon||gameState.hintUsed||!gameState.spriteReady)return;
+  const disabled=chooseEliminatedChoices(gameState.choices,gameState.pokemon.name);
+  if(!disabled.length)return;
+  gameState.eliminatedChoices=disabled;
+  gameState.eliminatedChoice=disabled[0];
+  gameState.hintUsed=true;
+}
+
+export function nextRound() {
+  if(!gameState.pokemon||gameState.hidePokemon)return;
+  if(gameState.completed||(gameState.mode==='challenge'&&gameState.numOfQuestions>=CHALLENGE_LENGTH)||
+     (gameState.mode==='gym'&&gameState.numOfQuestions>=GYM_LENGTH)||(gameState.mode==='daily'&&gameState.numOfQuestions>=DAILY_LENGTH))endGame();
+  else getRandomPokemon();
+}
+
+export function endGame() {
+  const unfinishedDaily=gameState.mode==='daily'&&!gameState.completed;
+  gameState.pokemon=null;
+  gameState.pokemonId=0;
+  gameState.choices=[];
+  gameState.hidePokemon=true;
+  gameState.lastAnswer=null;
+  gameState.spriteReady=false;
+  if(unfinishedDaily) {
+    resetGame();
+    gameState.mode='classic';
+  }
+}
+// Keep the old entry point for existing integrations.
+export const loadBestChallengeScore=loadGamePreferences;

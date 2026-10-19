@@ -109,4 +109,40 @@
       {:else if gameState.mode==='gym'}
         <p class="muted-text">{gameState.numOfRightAnswer>=4?'You earned the '+currentGym?.name+' emblem!':'Get at least four right to earn the badge. Try again!'}</p>
       {:else if gameState.mode==='challenge'}
-        <p class="m --- TRUNCATED --- 12,066 chars
+        <p class="muted-text">Personal best: {gameState.bestChallengeScore} points</p>
+      {/if}
+      {#if newlyEarned.length}<div class="award-toast">✦ New achievement: {newlyEarned.join(', ')}</div>{/if}
+      <button class="secondary-button" onclick={()=>{gameState.showPokedex=true;}}>View my Pokédex →</button>
+    </section>
+  {:else}
+    <div class="home-intro"><p class="eyebrow">THE ULTIMATE SILHOUETTE CHALLENGE</p><h2>Think you know every Pokémon?</h2><p>Guess the shadow. Build your streak. Become a Pokédex legend.</p></div>
+  {/if}
+  <section class="mode-area" aria-label="Choose a game mode">
+    <button class="daily-card" onclick={()=>begin('daily')} disabled={dailyFinished}>
+      <span class="daily-orb" aria-hidden="true">✦</span><span class="daily-copy"><span class="eyebrow">A FRESH PUZZLE EVERY DAY</span><strong>Daily Dex</strong><small>{dailyFinished?'Completed today · Come back tomorrow':gameState.dailyStatus?.guesses.length?'Continue '+gameState.dailyStatus.guesses.length+'/5 questions':'5 worldwide mysteries · Same puzzle for everyone'}</small></span><span class="daily-arrow" aria-hidden="true">{dailyFinished?'✓':'→'}</span>
+    </button>
+    {#if dailyFinished}<button class="secondary-button share-home" onclick={shareDaily}>↗ Share today’s result</button>{/if}
+    <div class="game-mode-grid">
+      <button class="mode-card free-card" onclick={()=>begin('classic')}><span class="mode-icon" aria-hidden="true">∞</span><span><strong>Free Play</strong><small>Infinite mysteries, zero pressure</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
+      <button class="mode-card challenge-card" onclick={()=>begin('challenge')}><span class="mode-icon" aria-hidden="true">★</span><span><strong>10-Round Challenge</strong><small>Chase your personal best</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
+    </div>
+    <div class="difficulty-panel"><div><strong>Choose your difficulty</strong><small>Applies to Free Play, Challenges & Gym Trials</small></div><div class="difficulty-segments" role="group" aria-label="Difficulty">
+      {#each ['easy','normal','expert'] as level}
+        <button class:active={gameState.difficulty===level} onclick={()=>setDifficulty(/** @type {'easy'|'normal'|'expert'} */(level))} aria-pressed={gameState.difficulty===level}>{level}</button>
+      {/each}
+    </div></div>
+    <button class="generation-select" onclick={()=>gameState.showSelectGenerations=true}>◈ Generations {gameState.selectedGenerations.join(', ')} <span>Edit →</span></button>
+    <div class="gym-heading"><div><p class="eyebrow">PROVE YOUR KNOWLEDGE</p><h3>Gym Trials <span>{gameState.profile.badges.length}/8 Badges</span></h3></div><button class="text-button" onclick={()=>showGyms=!showGyms} aria-expanded={showGyms}>{showGyms?'Collapse':'Explore Gyms'} ↗</button></div>
+    {#if showGyms}
+      <div class="gym-grid">
+        {#each GYMS as gym}
+          <button class="gym-card" onclick={()=>beginGym(gym.id)} aria-label={'Play '+gym.name}>
+            <span class="gym-icon" aria-hidden="true">{gym.icon}</span><strong>{gym.name}</strong><small>{gym.description}</small>{#if gameState.profile.badges.includes(gym.id)}<span class="gym-badge">✓ BADGE EARNED</span>{:else}<span class="gym-badge dim">5 MYSTERIES · 4 TO PASS</span>{/if}
+          </button>
+        {/each}
+      </div>
+    {/if}
+    <button class="collection-banner" onclick={()=>gameState.showPokedex=true}><span aria-hidden="true">◉</span><span><strong>My Pokédex</strong><small>{gameState.profile.discovered.length} / 898 species discovered · View awards</small></span><span aria-hidden="true">→</span></button>
+  </section>
+{/if}
+{#if shareStatus}<div class="share-status" role="status">{shareStatus}{#if copyResult}<textarea rows="5" readonly aria-label="Copyable Daily Dex result">{copyResult}</textarea>{/if}</div>{/if}
