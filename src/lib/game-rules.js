@@ -1,6 +1,7 @@
 /** A short run with a clear finish line; free play is still unlimited. */
 export const CHALLENGE_LENGTH = 10;
 export const DAILY_LENGTH = 5;
+export const GYM_LENGTH = 5;
 
 /**
  * Return the national Pokédex IDs for the selected generations.
@@ -86,6 +87,7 @@ export function resolveAnswer(state, answer) {
     lastPoints,
     points: state.points + lastPoints,
     completed: (state.mode === 'challenge' && numOfQuestions >= CHALLENGE_LENGTH) ||
-      (state.mode === 'daily' && numOfQuestions >= DAILY_LENGTH)
+      (state.mode === 'daily' && numOfQuestions >= DAILY_LENGTH) ||
+      (state.mode === 'gym' && numOfQuestions >= GYM_LENGTH)
   };
 }

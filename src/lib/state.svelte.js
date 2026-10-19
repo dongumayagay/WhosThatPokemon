@@ -10,7 +10,7 @@ export const gameState = $state({
   selectedGenerations: /** @type {number[]} */ ([1]),
   showSelectGenerations: false,
   choices: /** @type {string[]} */ ([]),
-  mode: /** @type {'classic' | 'challenge' | 'daily'} */ ('classic'),
+  mode: /** @type {'classic' | 'challenge' | 'daily' | 'gym'} */ ('classic'),
   numOfQuestions: 0,
   numOfRightAnswer: 0,
   points: 0,
@@ -23,6 +23,16 @@ export const gameState = $state({
   eliminatedChoices: /** @type {string[]} */ ([]),
   usedPokemonIds: /** @type {number[]} */ ([]),
   completed: false,
+  difficulty: /** @type {'easy'|'normal'|'expert'} */ ('normal'),
+  gymId: '',
+  gymDeck: /** @type {number[]} */ ([]),
+  showPokedex: false,
+  showSettings: false,
+  soundEnabled: false,
+  animationEnabled: true,
+  spriteReady: false,
+  profile: /** @type {ReturnType<typeof import('./progression.js').sanitizeProfile>} */ ({discovered:[],totalAnswered:0,totalCorrect:0,badges:[],achievements:[]}),
+  newAwards: /** @type {string[]} */ ([]),
   bestChallengeScore: 0,
   dailyDate: '',
   dailyDeck: /** @type {Array<{id:number, choices:number[]}>} */ ([]),
@@ -37,6 +47,10 @@ export function resetGame() {
   gameState.hidePokemon = true;
   gameState.choices = [];
   gameState.usedPokemonIds = [];
+  gameState.gymId = '';
+  gameState.gymDeck = [];
+  gameState.spriteReady = false;
+  gameState.newAwards = [];
   gameState.numOfQuestions = 0;
   gameState.numOfRightAnswer = 0;
   gameState.points = 0;

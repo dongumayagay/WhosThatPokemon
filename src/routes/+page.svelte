@@ -1,41 +1,32 @@
 <script>
   import { onMount } from 'svelte';
-  import { loadBestChallengeScore } from '$lib/pokemon.svelte.js';
+  import { loadGamePreferences } from '$lib/pokemon.svelte.js';
   import { gameState } from '$lib/state.svelte.js';
   import Header from '$lib/components/Header.svelte';
   import Control from '$lib/components/Control.svelte';
   import PokemonImage from '$lib/components/PokemonImage.svelte';
   import SelectGenerations from '$lib/components/SelectGenerations.svelte';
   import ProfessorOak from '$lib/components/ProfessorOak.svelte';
-
-  onMount(loadBestChallengeScore);
+  import Pokedex from '$lib/components/Pokedex.svelte';
+  import GameSettings from '$lib/components/GameSettings.svelte';
+  onMount(loadGamePreferences);
 </script>
-
-{#if gameState.showSelectGenerations}
-  <SelectGenerations />
-{/if}
-
-{#if gameState.showProfessorOak}
-  <ProfessorOak />
-{/if}
-
-<button
-  onclick={() => (gameState.showProfessorOak = true)}
-  style="bottom: calc(0.75rem + env(safe-area-inset-bottom));"
-  class="fixed right-3 z-20 bg-green-500 hover:bg-green-600 text-white font-pixel text-xs px-4 py-3 rounded-full shadow-lg border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all flex items-center gap-2 outline outline-black outline-2"
-  aria-label="Ask Professor Oak"
->
-  <span class="text-lg" aria-hidden="true">?</span>
-  <span class="hidden sm:inline">Ask Prof. Oak</span>
-</button>
-
-<div class="min-h-dvh w-full bg-gradient-to-tr from-yellow-500 via-orange-500 to-red-500">
-  <main
-    class="mx-auto flex min-h-dvh w-full max-w-5xl flex-col items-stretch justify-start gap-3 px-3 pt-4 text-center sm:justify-center sm:gap-5 sm:pt-8"
-    style="padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));"
-  >
-    <Header />
-    <PokemonImage />
-    <Control />
-  </main>
+<svelte:head>
+  <title>Who's That Pokémon? | Trainer Arcade</title>
+  <meta name="description" content="Guess Pokémon silhouettes, play Daily Dex, challenge eight Gyms and complete your personal Pokédex." />
+</svelte:head>
+<div class="site-shell" data-motion={gameState.animationEnabled?'on':'off'}>
+  <div class="site-topbar"><div class="site-identity"><span class="identity-ball" aria-hidden="true">◉</span><strong>WTP <span>ARCADE</span></strong></div>
+    <nav class="top-actions" aria-label="Game features">
+      <button onclick={()=>gameState.showPokedex=true} aria-label="Open personal Pokédex">◫ <span>Pokédex</span></button>
+      <button onclick={()=>gameState.showSettings=true} aria-label="Open game settings">⚙ <span>Settings</span></button>
+      <button onclick={()=>gameState.showProfessorOak=true} aria-label="Ask Professor Oak">? <span>Prof. Oak</span></button>
+    </nav>
+  </div>
+  <main class="arcade-main"><Header/><PokemonImage/><Control/></main>
+  <footer class="game-footer">FAN-MADE POKÉMON TRIVIA · MADE FOR TRAINERS · NOT AFFILIATED WITH THE POKÉMON COMPANY</footer>
+  {#if gameState.showSelectGenerations}<SelectGenerations/>{/if}
+  {#if gameState.showProfessorOak}<ProfessorOak/>{/if}
+  {#if gameState.showPokedex}<Pokedex/>{/if}
+  {#if gameState.showSettings}<GameSettings/>{/if}
 </div>
