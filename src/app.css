@@ -803,3 +803,5 @@
   margin-block: auto;
 }
 .wtp-toolbar, .wtp-footer { flex: none; }
+/* Preserve smooth anime-like edges when revealing high-resolution creature artwork. */
+.revealed-sprite { image-rendering: auto; }

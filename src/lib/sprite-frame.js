@@ -42,3 +42,16 @@ export function cropPokemonSprite(image) {
     return cropped.toDataURL('image/png');
   } catch { return null; /* CORS failures safely retain the original sprite. */ }
 }
+
+/**
+ * Use smooth, high-resolution creature art for the television mystery/reveal.
+ * Keep the original front sprite as an image-load fallback for missing art.
+ * No artwork is bundled with this fan project.
+ * @param {number} id
+ * @returns {string[]}
+ */
+export function getPokemonVisualUrls(id) {
+  if (!Number.isInteger(id) || id < 1 || id > 898) return [];
+  const root = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
+  return [root + '/other/official-artwork/' + id + '.png', root + '/' + id + '.png'];
+}

@@ -1,38 +1,47 @@
 <script>
   import { gameState } from '../state.svelte.js';
-  import { cropPokemonSprite } from '../sprite-frame.js';
+  import { cropPokemonSprite, getPokemonVisualUrls } from '../sprite-frame.js';
 
   let imageStatus = $state('idle');
   let retryKey = $state(0);
   let displaySpriteUrl = $state(/** @type {string | null} */(null));
-  const spriteUrl = $derived(gameState.pokemonId
-    ? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + gameState.pokemonId + '.png'
-    : null);
+  const visualUrls = $derived(getPokemonVisualUrls(gameState.pokemonId));
 
-  // A sprite is preloaded before any guesses are enabled. The color image is
-  // inserted into the DOM only after an answer is committed.
+  // Preload high-resolution art first; never consume a guess while loading.
+  // Use the legacy sprite when official artwork is temporarily unavailable.
   $effect(() => {
-    const src = spriteUrl;
+    const sources = visualUrls;
     retryKey;
     gameState.spriteReady = false;
     displaySpriteUrl = null;
-    if (!src) { imageStatus = 'idle'; return; }
+    if (!sources.length) { imageStatus = 'idle'; return; }
 
     imageStatus = 'loading';
     let active = true;
-    const image = new Image();
-    image.onload = () => {
-      if (active) {
-        displaySpriteUrl = cropPokemonSprite(image) || src;
+
+    /** @param {number} index */
+    function loadSource(index) {
+      if (!active) return;
+      if (index >= sources.length) {
+        imageStatus = 'error';
+        gameState.spriteReady = false;
+        return;
+      }
+      const image = new Image();
+      image.crossOrigin = 'anonymous';
+      image.onload = () => {
+        if (!active) return;
+        displaySpriteUrl = cropPokemonSprite(image) || sources[index];
         imageStatus = 'ready';
         gameState.spriteReady = true;
-      }
-    };
-    image.onerror = () => {
-      if (active) { imageStatus = 'error'; gameState.spriteReady = false; }
-    };
-    image.crossOrigin = 'anonymous';
-    image.src = src;
+      };
+      image.onerror = () => {
+        if (active) loadSource(index + 1);
+      };
+      image.src = sources[index];
+    }
+
+    loadSource(0);
     return () => { active = false; };
   });
 </script>
@@ -54,7 +63,7 @@
     {:else if imageStatus === 'ready'}
       {#if gameState.hidePokemon}
         <div class="silhouette-holder" role="img" aria-label="Mystery Pokémon silhouette"
-          style={'--sprite-mask:url("' + displaySpriteUrl + '");--sprite-fit:' + (displaySpriteUrl === spriteUrl ? '152%' : 'contain')}>
+          style={'--sprite-mask:url("' + displaySpriteUrl + '");--sprite-fit:' + (displaySpriteUrl?.startsWith('data:') ? 'contain' : '152%')}>
           <div class="mystery-silhouette"></div>
         </div>
         <svg class="anime-question" viewBox="0 0 150 240" aria-hidden="true" focusable="false">
@@ -65,7 +74,7 @@
       {:else}
         <div class="reveal-rings" aria-hidden="true"></div>
         <div class="reveal-flash" aria-hidden="true"></div>
-        <img class="revealed-sprite" src={displaySpriteUrl || spriteUrl} draggable="false"
+        <img class="revealed-sprite" src={displaySpriteUrl || visualUrls[0]} draggable="false"
           alt={'Revealed Pokémon: ' + gameState.pokemon.name} />
         <div class="anime-answer" role="status" aria-live="polite">
           <span>IT'S</span>
