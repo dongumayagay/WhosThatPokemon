@@ -805,3 +805,178 @@
 .wtp-toolbar, .wtp-footer { flex: none; }
 /* Preserve smooth anime-like edges when revealing high-resolution creature artwork. */
 .revealed-sprite { image-rendering: auto; }
+
+/* FULL-VIEWPORT CLASSIC POLISH */
+/* The 4:3 TV frame remains faithful, while the orange broadcast scene
+   continues across the entire viewport instead of floating on beige. */
+html, body { background: #f05544; }
+.site-shell {
+  --frame-width: min(100%, 1040px, calc((100svh - 213px) * 1.333333));
+  min-height: 100svh;
+  padding: 0;
+  overflow-x: clip;
+  background: linear-gradient(115deg, #fa9c59 0%, #f56642 33%, #ee4150 75%, #e52e4f 100%);
+  color: #fff9ed;
+}
+.site-shell::before {
+  content: '';
+  position: fixed;
+  inset: -12%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .22;
+  background:
+    repeating-linear-gradient(157deg,transparent 0 51px,#fff0c645 53px 56px,transparent 58px 92px),
+    radial-gradient(ellipse at 22% 35%,#ffd58a88,transparent 61%);
+  transform: translate3d(0,0,0);
+  animation: fullbleed-rays 13s ease-in-out infinite alternate;
+}
+.site-shell::after { content: none; }
+@keyframes fullbleed-rays {
+  from { transform: translate3d(-1.1%,.5%,0); }
+  to { transform: translate3d(1.1%,-.5%,0); }
+}
+.wtp-shell {
+  width: min(100%, 1170px);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+}
+.wtp-toolbar {
+  min-height: 50px;
+  flex: none;
+  padding: 6px clamp(12px,2.2vw,22px);
+}
+.wtp-menu-button {
+  min-height: 44px;
+  color: #fffaf2;
+  background: #8b2a415e;
+  border: 1px solid #fff5dc89;
+  border-radius: 999px;
+  padding-inline: 17px;
+  text-shadow: 0 1px 1px #5a214e78;
+  transition: background .18s ease,transform .18s ease;
+}
+.wtp-menu-button:hover,
+.wtp-menu-button:focus-visible {
+  background: #6f2948bb;
+  color: #ffffff;
+}
+.wtp-main {
+  width: 100%;
+  margin-block: auto;
+  padding-block: 10px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.anime-stage, .wtp-controls {
+  width: var(--frame-width);
+  max-width: 100%;
+  flex: none;
+}
+.anime-stage {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: #ee4950;
+}
+.anime-speedlines { opacity: .13; }
+.anime-grain { opacity: .055; }
+.wtp-controls {
+  padding: 12px clamp(10px,1.5vw,18px) 0;
+  margin: 0;
+  color: #fffaf2;
+}
+.wtp-scoreline {
+  color: #fffcf4;
+  font-weight: 900;
+  text-shadow: 0 1px 3px #75273b5e;
+  margin-bottom: 9px;
+}
+.wtp-progress { background: #ffecd76b; }
+.wtp-progress>div { background: #ffdf73; }
+.anime-answers { gap: 10px; }
+.answer-option.anime-option {
+  min-height: 56px;
+  border: 2px solid #29548c;
+  border-bottom: 4px solid #173d76;
+  border-radius: 9px;
+  background: #fffaf1;
+  color: #163c76;
+  box-shadow: 0 3px 0 #90294350;
+}
+.answer-option.anime-option:not(:disabled):hover {
+  background: #fff1b6;
+  border-color: #234783;
+}
+.answer-option.anime-option.correct { background: #d9fae5; border-color: #1b7956; border-bottom-color: #1b7956; }
+.answer-option.anime-option.incorrect { background: #ffe1df; border-color: #ac4643; border-bottom-color: #ac4643; }
+.wtp-choice-index {
+  background: #f6ebd8;
+  border-color: #93a6c3;
+}
+.wtp-text-action, .wtp-under-link, .wtp-small-note button {
+  color: #fff8ef;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-shadow: 0 1px 2px #722c4278;
+}
+.wtp-text-action:hover, .wtp-under-link:hover, .wtp-small-note button:hover { color: #fff0a3; }
+.wtp-text-action span { color: #fff2de; }
+.wtp-result-feedback { color: #ffedf0; text-shadow: 0 1px 2px #7530406b; }
+.wtp-result-feedback.is-correct { color: #e6ffe8; }
+.wtp-unlocked { color: #fff0b6; }
+.wtp-small-note, .wtp-keyboard-note { color: #fff1e3; text-shadow: 0 1px 2px #772f3966; }
+.wtp-finish { color: #fffaf0; text-shadow: 0 2px 3px #722e4580; }
+.wtp-finish-title { color: #ffe86f; }
+.wtp-primary { box-shadow: 0 3px 0 #782b4a96; }
+.wtp-footer {
+  flex: none;
+  color: #ffe8d1b8;
+  text-shadow: 0 1px 2px #63253c5a;
+  font-size: 10px;
+  letter-spacing: .01em;
+  padding: 0 10px 11px;
+  margin: 0 auto;
+}
+@media (max-width: 650px) {
+  .site-shell { --frame-width: 100%; }
+  .wtp-toolbar { min-height: 50px; }
+  .wtp-main { padding-block: 10px 15px; }
+  .wtp-controls { padding: 10px 11px 0; }
+  .anime-answers { gap: 8px; }
+  .wtp-footer { font-size: 9px; }
+}
+@media (max-width: 400px) {
+  .wtp-main { padding-block: 8px 13px; }
+  .wtp-controls { padding-inline: 9px; }
+  .anime-answers { gap: 8px; }
+  .answer-option.anime-option { min-height: 52px; padding: 8px; }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  .site-shell { --frame-width: min(100%, 760px); }
+  .wtp-main { margin-block: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell::before { animation: none !important; }
+  .wtp-menu-button { transition: none !important; }
+}
+[data-motion='off']::before {
+  animation: none !important;
+}
+/* Wide displays get one simple answer strip below the broadcast frame. */
+@media (min-width: 850px) {
+  .anime-answers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .answer-option.anime-option {
+    gap: 8px;
+    padding: 9px;
+    font-size: clamp(13px, 1.15vw, 16px);
+  }
+  .wtp-controls { padding-top: 10px; }
+}
