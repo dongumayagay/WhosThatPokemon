@@ -28,6 +28,7 @@ export const gameState = $state({
   gymDeck: /** @type {number[]} */ ([]),
   showPokedex: false,
   showSettings: false,
+  showModes: false,
   soundEnabled: false,
   animationEnabled: true,
   spriteReady: false,

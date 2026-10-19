@@ -16,13 +16,13 @@ test('arcade layout scrolls normally instead of trapping content in the viewport
   assert.match(styles,/overflow-x:hidden/);
 });
 test('mobile answers use a two-column grid and a usable tap size',()=>{
-  assert.match(control,/class="answers-grid"/);
+  assert.match(control,/class="answers-grid anime-answers"/);
   assert.match(styles,/\.answers-grid\{display:grid;grid-template-columns:1fr 1fr/);
   assert.match(styles,/\.answer-option\{min-height:72px/);
 });
 test('mystery is a CSS mask and revealed color art is gated by answer state',()=>{
   assert.match(image,/mystery-silhouette/);
-  assert.match(image,/mask-image:var\(--sprite-mask\)/);
+  assert.match(styles,/mask-image:\s*var\(--sprite-mask\)/);
   assert.match(image,/\{#if gameState.hidePokemon\}/);
   assert.match(image,/\{:else\}\s*<div class="reveal-rings"/);
   assert.match(image,/role="img" aria-label="Mystery Pokémon silhouette"/);
@@ -37,7 +37,7 @@ test('daily, gym, collection and settings are reachable from home',()=>{
 test('user settings and system reduced-motion are respected',()=>{
   assert.match(styles,/prefers-reduced-motion:reduce/);
   assert.match(page,/data-motion=/);
-  assert.match(page,/Open game settings/);
+  assert.match(control,/Open game settings/);
 });
 test('existing generation picker and Professor Oak still scroll on short phones',()=>{
   assert.match(gen,/max-h-\[calc\(100dvh-2rem\)\]/);
