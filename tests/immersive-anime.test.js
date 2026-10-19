@@ -56,3 +56,9 @@ test('responsive mobile answer grid, accessible touch targets and motion opt-out
   assert.match(styles,/\[data-motion='off'\]/);
   assert.match(styles,/min-height:\s*48px/);
 });
+
+test('anime scene uses crisp high-resolution creature art with graceful legacy-sprite fallback',()=>{
+  assert.match(stage,/getPokemonVisualUrls/);
+  assert.match(stage,/loadSource\(index \+ 1\)/);
+  assert.match(styles,/\.revealed-sprite\s*\{\s*image-rendering:\s*auto;/s);
+});
