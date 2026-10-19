@@ -88,7 +88,7 @@
   {:else}
     <div class="answer-feedback" class:was-correct={correctGuess} role="status" aria-live="polite">
       <span class="feedback-symbol" aria-hidden="true">{correctGuess?'✓':'✕'}</span>
-      <div><strong>{correctGuess?'You got it!':'It's revealed!'}</strong><p>{correctGuess?'+'+gameState.lastPoints+' points'+(gameState.streak>=3?' · '+gameState.streak+'-answer combo!':''):'It was '+gameState.pokemon.name+'. You’ll get the next one!'}</p></div>
+      <div><strong>{correctGuess?'You got it!':'Mystery revealed!'}</strong><p>{correctGuess?'+'+gameState.lastPoints+' points'+(gameState.streak>=3?' · '+gameState.streak+'-answer combo!':''):'It was '+gameState.pokemon.name+'. You’ll get the next one!'}</p></div>
     </div>
     {#if newlyEarned.length}
       <div class="award-toast" role="status">✦ Unlocked: {newlyEarned.join(', ')}!</div>
