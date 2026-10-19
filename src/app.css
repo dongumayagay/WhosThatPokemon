@@ -791,3 +791,15 @@
   -webkit-mask-size: var(--sprite-fit, 152%);
   mask-size: var(--sprite-fit, 152%);
 }
+
+/* The eyecatch sits in the center of an unbroken screen on tall devices.
+   Auto margins resolve to zero when the game needs natural scrolling. */
+.wtp-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.wtp-main {
+  margin-block: auto;
+}
+.wtp-toolbar, .wtp-footer { flex: none; }
