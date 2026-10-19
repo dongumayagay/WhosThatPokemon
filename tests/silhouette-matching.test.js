@@ -1,3 +1,4 @@
+// @ts-nocheck — synthetic Node test fixtures.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SHAPE_SIZE, encodeSilhouette, silhouetteDistance } from '../src/lib/silhouette-math.js';
