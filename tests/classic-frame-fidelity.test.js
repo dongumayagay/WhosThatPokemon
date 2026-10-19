@@ -10,7 +10,7 @@ const stage = readFileSync('src/lib/components/PokemonImage.svelte', 'utf8');
 test('1998 aqua burst has a feathered, hand-painted edge rather than a clean star shape', () => {
   assert.match(frame, /id="painted-feather-edge"/);
   const featherCount = (frame.match(/class="ink-fray"/g) || []).length;
-  assert.ok(featherCount >= 55, \`expected at least 55 fine feather rays, got \${featherCount}\`);
+  assert.ok(featherCount >= 55, 'expected at least 55 fine feather rays, got ' + featherCount);
 });
 
 test('the television frame is the focus on tall phones without constraining scroll', () => {
