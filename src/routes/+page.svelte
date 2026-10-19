@@ -26,6 +26,7 @@
       </button>
     </nav>
     <main class="wtp-main">
+      <h1 class="sr-only">Who’s That Pokémon?</h1>
       <PokemonImage />
       <Control />
     </main>
