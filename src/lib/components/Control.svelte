@@ -17,6 +17,12 @@
 
   let shareStatus = $state('');
   let copyResult = $state('');
+  /** @type {HTMLButtonElement | undefined} */
+  let menuCloseButton;
+
+  $effect(() => {
+    if (gameState.showModes) queueMicrotask(() => menuCloseButton?.focus());
+  });
 
   /** @param {string} choice */
   function guess(choice) {
@@ -30,7 +36,27 @@
   /** @param {KeyboardEvent} event */
   function shortcuts(event) {
     if (gameState.showModes) {
-      if (event.key === 'Escape') gameState.showModes = false;
+      if (event.key === 'Escape') {
+        gameState.showModes = false;
+        queueMicrotask(() => {
+          const opener = document.querySelector('.wtp-menu-button');
+          if (opener instanceof HTMLElement) opener.focus();
+        });
+      } else if (event.key === 'Tab') {
+        const panel = menuCloseButton?.closest('.wtp-menu-panel');
+        const focusable = Array.from(panel?.querySelectorAll('button:not([disabled]),summary') || []);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (first instanceof HTMLElement && last instanceof HTMLElement) {
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      }
       return;
     }
     if (gameState.showSelectGenerations || gameState.showProfessorOak ||
@@ -205,7 +231,7 @@
     <section class="wtp-menu-panel" role="dialog" aria-modal="true" aria-label="Game modes and options">
       <header class="wtp-menu-head">
         <h2>Choose your adventure</h2>
-        <button class="wtp-close-menu" onclick={() => gameState.showModes = false}
+        <button bind:this={menuCloseButton} class="wtp-close-menu" onclick={() => gameState.showModes = false}
           aria-label="Close menu">✕</button>
       </header>
       <div class="wtp-menu-modes">

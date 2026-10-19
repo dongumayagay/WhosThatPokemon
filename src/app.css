@@ -177,10 +177,10 @@
 .anime-headline span { color: inherit; }
 .silhouette-holder {
   z-index: 4;
-  left: 8%;
-  top: 28%;
-  width: 54%;
-  height: 62%;
+  left: 5%;
+  top: 24%;
+  width: 62%;
+  height: 70%;
   filter: drop-shadow(4px 6px 0 #0e347c25);
   animation: anime-silhouette-enter .42s cubic-bezier(.15,.76,.25,1) both;
 }
@@ -342,7 +342,8 @@
 }
 @keyframes anime-ring {
   0% { opacity: 0; transform: scale(.7); }
-  100% { opacity: 1; transform: scale(1); }
+  65% { opacity: .5; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.1); }
 }
 @keyframes anime-flash {
   0% { opacity: .96; }
@@ -557,11 +558,11 @@
   .site-shell {padding: 0 8px 14px;}
   .wtp-toolbar {min-height:47px;}
   .anime-stage {border-width:2px;}
-  .anime-headline h1 {font-size:clamp(18px,5.4vw,35px);line-height:1.08;-webkit-text-stroke:2px #164d9a;text-shadow:2px 2px 0 #102e70;}
+  .anime-headline h1 {font-size:clamp(22px,6.4vw,39px);line-height:1.08;-webkit-text-stroke:2px #164d9a;text-shadow:2px 2px 0 #102e70;}
   .anime-headline {top:5%;}
   .anime-question {top:37%;right:10%;font-size:clamp(75px,21vw,125px);-webkit-text-stroke:4px #14519d;}
   .anime-opening-question {font-size:clamp(90px,25vw,135px);}
-  .silhouette-holder {top:29%;left:7%;width:55%;height:61%;}
+  .silhouette-holder {top:24%;left:4%;width:66%;height:70%;}
   .anime-answer {top:44%;}
   .anime-answer strong {font-size:clamp(16px,4.5vw,27px);-webkit-text-stroke:1.5px #174990;text-shadow:1px 2px 0 #123777;}
   .anime-answer span {font-size:clamp(13px,3vw,20px);}
@@ -573,8 +574,8 @@
 }
 @media (max-width: 400px) {
   .wtp-menu-button {font-size:12px;}
-  .anime-headline h1 {font-size:clamp(17px,5.1vw,22px);}
-  .anime-question {right:8%;top:38%;font-size:clamp(68px,22vw,95px);}
+  .anime-headline h1 {font-size:clamp(21px,6.3vw,26px);}
+  .anime-question {right:7%;top:38%;font-size:clamp(68px,22vw,95px);}
   .anime-opening-question {font-size:100px;left:43%;}
   .anime-answer strong {font-size:clamp(14px,4.8vw,19px);}
   .anime-error {gap:6px;font-size:12px;}
