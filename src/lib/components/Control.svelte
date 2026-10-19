@@ -17,8 +17,7 @@
 
   let shareStatus = $state('');
   let copyResult = $state('');
-  /** @type {HTMLButtonElement | undefined} */
-  let menuCloseButton;
+  let menuCloseButton = $state(/** @type {HTMLButtonElement | undefined} */(undefined));
 
   $effect(() => {
     if (gameState.showModes) queueMicrotask(() => menuCloseButton?.focus());
@@ -228,7 +227,7 @@
   <div class="wtp-menu-overlay">
     <button class="wtp-menu-scrim" tabindex="-1" aria-label="Close game menu"
       onclick={() => gameState.showModes = false}></button>
-    <section class="wtp-menu-panel" role="dialog" aria-modal="true" aria-label="Game modes and options">
+    <div class="wtp-menu-panel" role="dialog" aria-modal="true" aria-label="Game modes and options">
       <header class="wtp-menu-head">
         <h2>Choose your adventure</h2>
         <button bind:this={menuCloseButton} class="wtp-close-menu" onclick={() => gameState.showModes = false}
@@ -284,6 +283,6 @@
         <button aria-label="Open game settings" onclick={() => {gameState.showModes = false; gameState.showSettings = true;}}>Settings</button>
         <button aria-label="Ask Professor Oak" onclick={() => {gameState.showModes = false; gameState.showProfessorOak = true;}}>Professor Oak</button>
       </div>
-    </section>
+    </div>
   </div>
 {/if}
