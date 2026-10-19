@@ -126,7 +126,7 @@
       <button class="mode-card free-card" onclick={()=>begin('classic')}><span class="mode-icon" aria-hidden="true">∞</span><span><strong>Free Play</strong><small>Infinite mysteries, zero pressure</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
       <button class="mode-card challenge-card" onclick={()=>begin('challenge')}><span class="mode-icon" aria-hidden="true">★</span><span><strong>10-Round Challenge</strong><small>Chase your personal best</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
     </div>
-    <div class="difficulty-panel"><div><strong>Choose your difficulty</strong><small>Applies to Free Play, Challenges & Gym Trials</small></div><div class="difficulty-segments" role="group" aria-label="Difficulty">
+    <div class="difficulty-panel"><div><strong>Choose your difficulty</strong><small>{gameState.difficulty==='easy'?'3 choices · contrasting silhouettes':gameState.difficulty==='normal'?'4 choices · moderately similar shapes':'4 choices · closest-looking shapes'} · Daily Dex is fixed</small></div><div class="difficulty-segments" role="group" aria-label="Difficulty">
       {#each ['easy','normal','expert'] as level}
         <button class:active={gameState.difficulty===level} onclick={()=>setDifficulty(/** @type {'easy'|'normal'|'expert'} */(level))} aria-pressed={gameState.difficulty===level}>{level}</button>
       {/each}
