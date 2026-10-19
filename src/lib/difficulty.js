@@ -1,4 +1,7 @@
-/** Hand-curated evolution and visual-family groups; used only to rank decoys. */
+import silhouettes from './silhouette-data.json' with { type: 'json' };
+import { silhouetteDistance } from './silhouette-math.js';
+
+// Fallback only for sprites not represented in the generated silhouette dataset.
 export const LOOKALIKE_GROUPS = [
   [25,26,172,311,312,417,587,702,777],
   [133,134,135,136,196,197,470,471,700],
@@ -16,41 +19,67 @@ export const LOOKALIKE_GROUPS = [
   [158,159,160,258,259,260,393,394,395,501,502,503]
 ];
 /** @param {number} id @param {number[]} counts */
-function generationOf(id,counts) {
-  let end=0;
-  for(let i=0;i<counts.length;i++) {end+=counts[i];if(id<=end)return i;}
+function generationOf(id, counts) {
+  let end = 0;
+  for (let i = 0; i < counts.length; i++) { end += counts[i]; if (id <= end) return i; }
   return -1;
 }
 /** @param {number[]} items @param {() => number} random */
-function shuffle(items,random) {
-  for(let i=items.length-1;i>0;i--) {
-    const j=Math.min(i,Math.max(0,Math.floor(random()*(i+1))));
-    [items[i],items[j]]=[items[j],items[i]];
+function shuffle(items, random) {
+  for (let i = items.length - 1; i > 0; i--) {
+    const value = random();
+    const j = Math.min(i, Math.max(0, Math.floor((Number.isFinite(value) ? value : 0) * (i + 1))));
+    [items[i], items[j]] = [items[j], items[i]];
   }
   return items;
 }
 /**
- * Scale from three generous alternatives to four deliberately confusing ones.
- * Expert uses a curated visual-family prior and close Pokédex neighbours as a fallback.
+ * Rank the allowed pool by actual outline similarity; closer silhouettes are harder.
+ * A fallback is kept for missing sprites, but no Pokédex distance is used as a visual proxy.
+ * @param {number} target
+ * @param {number[]} pool
+ * @param {number[]} counts
+ * @param {Array<[string, number] | null>} shapes
+ */
+export function rankSilhouetteDecoys(target, pool, counts, shapes = silhouettes) {
+  const group = LOOKALIKE_GROUPS.find(g => g.includes(target)) || [];
+  const g = generationOf(target, counts);
+  const targetShape = shapes[target];
+  return pool.filter(id => id !== target).map(id => {
+    const entry = shapes[id];
+    let distance = Infinity;
+    if (targetShape && entry) {
+      try { distance = silhouetteDistance(targetShape, entry); } catch { /* Invalid shape falls back. */ }
+    }
+    const fallback = (group.includes(id) ? 0 : 2) + (generationOf(id, counts) === g ? 0 : 1);
+    return { id, score: Number.isFinite(distance) ? distance : 5 + fallback };
+  }).sort((a,b) => a.score - b.score || a.id - b.id);
+}
+/** @param {Array<{id:number,score:number}>} sorted @param {'easy'|'normal'|'expert'} mode @param {number} count @param {() => number} random */
+function chooseWindow(sorted, mode, count, random) {
+  const n = sorted.length;
+  if (n <= count) return sorted.map(x=>x.id);
+  // Explicitly tier the decoy distribution by outline similarity, not ID proximity.
+  let start, end;
+  if (mode === 'expert') { start = 0; end = Math.max(count, Math.ceil(n * .12)); }
+  else if (mode === 'normal') { start = Math.floor(n * .20); end = Math.max(start + count, Math.ceil(n * .58)); }
+  else { start = Math.floor(n * .65); end = n; }
+  start = Math.max(0, Math.min(start, n - count));
+  end = Math.max(start + count, Math.min(end, n));
+  return shuffle(sorted.slice(start, end).map(x => x.id), random).slice(0,count);
+}
+/**
  * @param {number} correctId
  * @param {number[]} availableIds
  * @param {number[]} generationCounts
  * @param {'easy'|'normal'|'expert'} difficulty
  * @param {() => number} [random]
+ * @param {Array<[string, number] | null>} [shapes]
  */
-export function createDifficultyChoices(correctId,availableIds,generationCounts,difficulty,random=Math.random) {
-  const count=difficulty==='easy'?3:4;
-  const pool=[...new Set(availableIds)];
-  if(!pool.includes(correctId)||pool.length<count||!['easy','normal','expert'].includes(difficulty))throw new RangeError('Not enough eligible choices');
-  const generation=generationOf(correctId,generationCounts);
-  const sameFamily=LOOKALIKE_GROUPS.find(g=>g.includes(correctId)) ?? [];
-  const eligible=shuffle(pool.filter(x=>x!==correctId),random);
-  if(difficulty==='normal') {
-    eligible.sort((a,b)=>Number(generationOf(b,generationCounts)===generation)-Number(generationOf(a,generationCounts)===generation));
-  } else if(difficulty==='expert') {
-    /** @param {number} x */
-    const grade=(x)=> (sameFamily.includes(x)?-2000:0) + (generationOf(x,generationCounts)===generation?-500:0) + Math.abs(x-correctId);
-    eligible.sort((a,b)=>grade(a)-grade(b));
-  }
-  return shuffle([correctId,...eligible.slice(0,count-1)],random);
+export function createDifficultyChoices(correctId, availableIds, generationCounts, difficulty, random = Math.random, shapes = silhouettes) {
+  const count = difficulty === 'easy' ? 3 : 4;
+  const pool = [...new Set(availableIds)];
+  if (!pool.includes(correctId) || pool.length < count || !['easy','normal','expert'].includes(difficulty)) throw new RangeError('Not enough eligible choices');
+  const candidates = rankSilhouetteDecoys(correctId, pool, generationCounts, shapes);
+  return shuffle([correctId, ...chooseWindow(candidates, difficulty, count - 1, random)], random);
 }
