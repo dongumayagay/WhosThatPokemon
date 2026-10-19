@@ -1,193 +1,148 @@
 <script>
   import { gameState } from '../state.svelte.js';
+  import { GYMS, getGym, GYM_LENGTH } from '../gym-trials.js';
+  import { ACHIEVEMENTS } from '../progression.js';
   import { CHALLENGE_LENGTH, DAILY_LENGTH } from '../game-rules.js';
   import { formatDailyShare, getUtcDateKey, getTrainerRank } from '../daily-challenge.js';
-  import { startGame, answerPokemon, nextRound, endGame, useHint } from '../pokemon.svelte.js';
+  import { startGame, startGym, answerPokemon, nextRound, endGame, useHint, setDifficulty } from '../pokemon.svelte.js';
+  import { playResultTone } from '../sound.js';
 
-  const correctGuess = $derived(!gameState.hidePokemon && gameState.lastAnswer === gameState.pokemon?.name);
-  const dailyFinished = $derived(gameState.dailyStatus?.date === getUtcDateKey() && gameState.dailyStatus?.completed);
-  let shareStatus = $state('');
-  let fallbackShareText = $state('');
+  const correctGuess=$derived(!gameState.hidePokemon&&gameState.lastAnswer===gameState.pokemon?.name);
+  const dailyFinished=$derived(gameState.dailyStatus?.date===getUtcDateKey()&&gameState.dailyStatus?.completed);
+  const totalRounds=$derived(gameState.mode==='daily'?DAILY_LENGTH:gameState.mode==='gym'?GYM_LENGTH:gameState.mode==='challenge'?CHALLENGE_LENGTH:0);
+  const currentGym=$derived(getGym(gameState.gymId));
+  const newlyEarned=$derived(gameState.newAwards.map(id=>id.startsWith('badge:')?getGym(id.slice(6))?.name+' badge':ACHIEVEMENTS.find(a=>a.id===id)?.name).filter(Boolean));
+  let showGyms=$state(false);
+  let shareStatus=$state('');
+  let copyResult=$state('');
 
+  /** @param {string} choice */
+  function guess(choice) {
+    const before=gameState.hidePokemon;
+    answerPokemon(choice);
+    if(before&&!gameState.hidePokemon&&gameState.soundEnabled)playResultTone(choice===gameState.pokemon?.name,gameState.streak);
+  }
   /** @param {KeyboardEvent} event */
-  function handleShortcut(event) {
-    if (gameState.showSelectGenerations || gameState.showProfessorOak || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
-    const target = event.target;
-    if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
-
-    if (gameState.pokemon && gameState.hidePokemon && /^[1-4]$/.test(event.key)) {
-      const choice = gameState.choices[Number(event.key) - 1];
-      if (choice) answerPokemon(choice);
-    } else if (gameState.pokemon && !gameState.hidePokemon && event.key === 'Enter') {
-      if (target instanceof HTMLElement && target.tagName === 'BUTTON') return;
-      event.preventDefault();
-      nextRound();
+  function shortcuts(event) {
+    if(gameState.showSelectGenerations||gameState.showProfessorOak||gameState.showPokedex||gameState.showSettings||event.repeat||event.altKey||event.ctrlKey||event.metaKey)return;
+    const target=event.target;
+    if(target instanceof HTMLElement&&(target.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target.tagName)))return;
+    if(gameState.pokemon&&gameState.hidePokemon&&/^[1-4]$/.test(event.key)){
+      const choice=gameState.choices[Number(event.key)-1];
+      if(choice)guess(choice);
+    } else if(gameState.pokemon&&!gameState.hidePokemon&&event.key==='Enter') {
+      if(target instanceof HTMLElement&&target.tagName==='BUTTON')return;
+      event.preventDefault();nextRound();
     }
   }
-
-  /** @param {'classic' | 'challenge' | 'daily'} mode */
-  function begin(mode) {
-    shareStatus = '';
-    fallbackShareText = '';
-    startGame(mode);
-  }
-
-  async function shareDailyResult() {
-    const result = gameState.dailyStatus;
-    if (!result?.completed) return;
-    const content = formatDailyShare(result.date, result, 'https://whos-that-pokemon-7iu.pages.dev');
-    shareStatus = '';
-    fallbackShareText = '';
+  /** @param {'classic'|'daily'|'challenge'} mode */
+  function begin(mode) {shareStatus='';copyResult='';startGame(mode);}
+  /** @param {string} id */
+  function beginGym(id) {shareStatus='';copyResult='';startGym(id);}
+  async function shareDaily() {
+    const result=gameState.dailyStatus;
+    if(!result?.completed)return;
+    const content=formatDailyShare(result.date,result,'https://whos-that-pokemon-7iu.pages.dev');
+    shareStatus='';copyResult='';
     try {
-      if (navigator.share) {
-        await navigator.share({title: 'Daily Dex result', text: content});
-        shareStatus = 'Shared!';
-      } else if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(content);
-        shareStatus = 'Copied! Paste your score anywhere.';
-      } else {
-        fallbackShareText = content;
-        shareStatus = 'Copy your result below.';
-      }
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') return;
-      fallbackShareText = content;
-      shareStatus = 'Copy your result below.';
+      if(navigator.share) {await navigator.share({title:'Daily Dex results',text:content});shareStatus='Result shared!';}
+      else if(navigator.clipboard?.writeText) {await navigator.clipboard.writeText(content);shareStatus='Copied! Share your score with friends.';}
+      else {copyResult=content;shareStatus='Copy your result below.';}
+    } catch(e) {
+      if(e instanceof Error&&e.name==='AbortError')return;
+      copyResult=content;shareStatus='Copy your result below.';
     }
   }
 </script>
+<svelte:window onkeydown={shortcuts}/>
 
-<svelte:window onkeydown={handleShortcut} />
-
-<div class="mx-auto w-full max-w-3xl px-3 sm:px-4">
-  {#if gameState.pokemon}
-    <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-bold text-white sm:gap-3" aria-label="Current game statistics">
-      <span class="rounded-full border-2 border-neutral-900 bg-sky-700 px-3 py-2 shadow-[2px_3px_0_#111827]">
-        {gameState.mode === 'daily' ? 'Daily ' + (gameState.numOfQuestions + (gameState.hidePokemon ? 1 : 0)) + ' / ' + DAILY_LENGTH : gameState.mode === 'challenge' ? 'Round ' + (gameState.numOfQuestions + (gameState.hidePokemon ? 1 : 0)) + ' / ' + CHALLENGE_LENGTH : 'Free play'}
-      </span>
-      <span class="rounded-full border-2 border-neutral-900 bg-neutral-800 px-3 py-2 shadow-[2px_3px_0_#111827]">{gameState.points} pts</span>
-      <span class="rounded-full border-2 border-neutral-900 bg-amber-600 px-3 py-2 shadow-[2px_3px_0_#111827]">Streak: {gameState.streak}</span>
-      <span class="rounded-full border-2 border-neutral-900 bg-emerald-700 px-3 py-2 shadow-[2px_3px_0_#111827]">{gameState.numOfRightAnswer}/{gameState.numOfQuestions} right</span>
+{#if gameState.pokemon}
+  <section class="round-dashboard" aria-label="Current round statistics">
+    <div class="stat"><span class="stat-label">MODE</span><strong>{gameState.mode==='gym'?currentGym?.name:gameState.mode==='daily'?'DAILY DEX':gameState.mode==='challenge'?'10-ROUND CHALLENGE':'FREE PLAY'}</strong></div>
+    <div class="stat"><span class="stat-label">ROUND</span><strong>{totalRounds?(gameState.numOfQuestions+(gameState.hidePokemon?1:0))+'/'+totalRounds:'ENDLESS'}</strong></div>
+    <div class="stat"><span class="stat-label">SCORE</span><strong>{gameState.points}</strong></div>
+    <div class="stat"><span class="stat-label">COMBO</span><strong>{gameState.streak} <span aria-hidden="true">⚡</span></strong></div>
+  </section>
+  {#if totalRounds}
+    <div class="run-progress" role="progressbar" aria-label="Challenge progress" aria-valuenow={gameState.numOfQuestions} aria-valuemin="0" aria-valuemax={totalRounds}><div style:width={(100*gameState.numOfQuestions/totalRounds)+'%'}></div></div>
+  {/if}
+  <div class="answer-heading"><div><p class="eyebrow">MAKE YOUR GUESS</p><h2>Who is this Pokémon?</h2></div>{#if gameState.hidePokemon}<span class="answer-help">{gameState.choices.length} possible answers</span>{/if}</div>
+  <div class="answers-grid" role="group" aria-label="Choose the Pokémon">
+    {#each gameState.choices as choice,i}
+      <button
+        class="answer-option" class:correct={!gameState.hidePokemon&&choice===gameState.pokemon.name}
+        class:incorrect={!gameState.hidePokemon&&choice===gameState.lastAnswer&&!correctGuess}
+        class:eliminated={gameState.eliminatedChoices.includes(choice)&&gameState.hidePokemon}
+        onclick={()=>guess(choice)} disabled={!gameState.spriteReady||!gameState.hidePokemon||gameState.eliminatedChoices.includes(choice)}
+        aria-keyshortcuts={String(i+1)} aria-label={'Answer '+(i+1)+': '+choice}>
+        <span class="option-index">{i+1}</span><span class="option-name">{choice}</span>
+        {#if !gameState.hidePokemon&&choice===gameState.pokemon.name}<span class="option-mark" aria-hidden="true">✓</span>{:else if !gameState.hidePokemon&&choice===gameState.lastAnswer&&!correctGuess}<span class="option-mark" aria-hidden="true">✕</span>{/if}
+      </button>
+    {/each}
+  </div>
+  {#if gameState.hidePokemon}
+    <div class="game-actions">
+      <button class="secondary-button hint-button" onclick={useHint} disabled={!gameState.spriteReady||gameState.hintUsed}>{gameState.hintUsed?'Hint used':'✦ 50/50 Hint'} <small>{gameState.hintUsed?'':'Half points'}</small></button>
+      <button class="text-button" onclick={endGame}>{gameState.mode==='daily'?'Save & exit':'End run'} →</button>
     </div>
-    {#if gameState.mode !== 'classic'}
-      <div
-        class="mt-3 h-3 overflow-hidden rounded-full border-2 border-neutral-900 bg-white/60"
-        role="progressbar"
-        aria-label={gameState.mode === 'daily' ? 'Daily Dex progress' : 'Challenge progress'}
-        aria-valuemin="0"
-        aria-valuemax={gameState.mode === 'daily' ? DAILY_LENGTH : CHALLENGE_LENGTH}
-        aria-valuenow={gameState.numOfQuestions}
-      >
-        <div class="h-full bg-emerald-500 transition-[width] duration-300" style:width={(gameState.numOfQuestions / (gameState.mode === 'daily' ? DAILY_LENGTH : CHALLENGE_LENGTH)) * 100 + '%'}></div>
-      </div>
+  {:else}
+    <div class="answer-feedback" class:was-correct={correctGuess} role="status" aria-live="polite">
+      <span class="feedback-symbol" aria-hidden="true">{correctGuess?'✓':'✕'}</span>
+      <div><strong>{correctGuess?'Excellent catch!':'Mystery solved!'}</strong><p>{correctGuess?'+'+gameState.lastPoints+' points'+(gameState.streak>=3?' · '+gameState.streak+'-answer combo!':''):'It was '+gameState.pokemon.name+'. You’ll get the next one!'}</p></div>
+    </div>
+    {#if newlyEarned.length}
+      <div class="award-toast" role="status">✦ Unlocked: {newlyEarned.join(', ')}!</div>
     {/if}
-    {#if gameState.mode === 'daily'}
-      <div class="mt-2 flex items-center justify-center gap-2" aria-label={'Daily results: ' + (gameState.dailyStatus?.marks.join(', ') || 'No answers yet')}>
-        {#each [0,1,2,3,4] as i}
-          <span class="text-xl" aria-hidden="true">{gameState.dailyStatus?.marks[i] ?? '⬜'}</span>
+    <button class="primary-button next-button" onclick={nextRound}>{gameState.completed?'See your results':'Next mystery'} <span aria-hidden="true">→</span></button>
+  {/if}
+  <p class="keyboard-help">{gameState.hidePokemon?'PRESS 1–'+gameState.choices.length+' TO GUESS':'PRESS ENTER TO CONTINUE'}</p>
+{:else}
+  {#if gameState.numOfQuestions>0||gameState.completed}
+    <section class="run-results">
+      <p class="eyebrow">ROUND COMPLETE</p>
+      <h2>{gameState.mode==='daily'?'Daily Dex complete!':gameState.mode==='gym'?(gameState.numOfRightAnswer>=4?'Gym badge earned!':'Gym trial complete!'):gameState.completed?'Challenge complete!':'Nice run, Trainer!'}</h2>
+      <p class="result-rank">{gameState.mode==='daily'?getTrainerRank(gameState.numOfRightAnswer,DAILY_LENGTH):gameState.mode==='gym'?currentGym?.name:'Keep building your Pokédex'}</p>
+      <div class="result-numbers"><div><strong>{gameState.points}</strong><span>POINTS</span></div><div><strong>{gameState.numOfRightAnswer}/{gameState.numOfQuestions}</strong><span>ACCURACY</span></div><div><strong>{gameState.bestStreak}</strong><span>BEST COMBO</span></div></div>
+      {#if gameState.mode==='daily'}
+        <p class="daily-grid" aria-label="Your five daily results">{gameState.dailyStatus?.marks.join('')??''}</p>
+        <button class="primary-button share-button" onclick={shareDaily}>↗ Share daily score</button>
+      {:else if gameState.mode==='gym'}
+        <p class="muted-text">{gameState.numOfRightAnswer>=4?'You earned the '+currentGym?.name+' emblem!':'Get at least four right to earn the badge. Try again!'}</p>
+      {:else if gameState.mode==='challenge'}
+        <p class="muted-text">Personal best: {gameState.bestChallengeScore} points</p>
+      {/if}
+      {#if newlyEarned.length}<div class="award-toast">✦ New achievement: {newlyEarned.join(', ')}</div>{/if}
+      <button class="secondary-button" onclick={()=>{gameState.showPokedex=true;}}>View my Pokédex →</button>
+    </section>
+  {:else}
+    <div class="home-intro"><p class="eyebrow">THE ULTIMATE SILHOUETTE CHALLENGE</p><h2>Think you know every Pokémon?</h2><p>Guess the shadow. Build your streak. Become a Pokédex legend.</p></div>
+  {/if}
+  <section class="mode-area" aria-label="Choose a game mode">
+    <button class="daily-card" onclick={()=>begin('daily')} disabled={dailyFinished}>
+      <span class="daily-orb" aria-hidden="true">✦</span><span class="daily-copy"><span class="eyebrow">A FRESH PUZZLE EVERY DAY</span><strong>Daily Dex</strong><small>{dailyFinished?'Completed today · Come back tomorrow':gameState.dailyStatus?.guesses.length?'Continue '+gameState.dailyStatus.guesses.length+'/5 questions':'5 worldwide mysteries · Same puzzle for everyone'}</small></span><span class="daily-arrow" aria-hidden="true">{dailyFinished?'✓':'→'}</span>
+    </button>
+    {#if dailyFinished}<button class="secondary-button share-home" onclick={shareDaily}>↗ Share today’s result</button>{/if}
+    <div class="game-mode-grid">
+      <button class="mode-card free-card" onclick={()=>begin('classic')}><span class="mode-icon" aria-hidden="true">∞</span><span><strong>Free Play</strong><small>Infinite mysteries, zero pressure</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
+      <button class="mode-card challenge-card" onclick={()=>begin('challenge')}><span class="mode-icon" aria-hidden="true">★</span><span><strong>10-Round Challenge</strong><small>Chase your personal best</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
+    </div>
+    <div class="difficulty-panel"><div><strong>Choose your difficulty</strong><small>Applies to Free Play, Challenges & Gym Trials</small></div><div class="difficulty-segments" role="group" aria-label="Difficulty">
+      {#each ['easy','normal','expert'] as level}
+        <button class:active={gameState.difficulty===level} onclick={()=>setDifficulty(/** @type {'easy'|'normal'|'expert'} */(level))} aria-pressed={gameState.difficulty===level}>{level}</button>
+      {/each}
+    </div></div>
+    <button class="generation-select" onclick={()=>gameState.showSelectGenerations=true}>◈ Generations {gameState.selectedGenerations.join(', ')} <span>Edit →</span></button>
+    <div class="gym-heading"><div><p class="eyebrow">PROVE YOUR KNOWLEDGE</p><h3>Gym Trials <span>{gameState.profile.badges.length}/8 Badges</span></h3></div><button class="text-button" onclick={()=>showGyms=!showGyms} aria-expanded={showGyms}>{showGyms?'Collapse':'Explore Gyms'} ↗</button></div>
+    {#if showGyms}
+      <div class="gym-grid">
+        {#each GYMS as gym}
+          <button class="gym-card" onclick={()=>beginGym(gym.id)} aria-label={'Play '+gym.name}>
+            <span class="gym-icon" aria-hidden="true">{gym.icon}</span><strong>{gym.name}</strong><small>{gym.description}</small>{#if gameState.profile.badges.includes(gym.id)}<span class="gym-badge">✓ BADGE EARNED</span>{:else}<span class="gym-badge dim">5 MYSTERIES · 4 TO PASS</span>{/if}
+          </button>
         {/each}
       </div>
     {/if}
-  {:else if gameState.mode === 'daily' && gameState.completed}
-    <div class="rounded-2xl border-4 border-neutral-900 bg-white/95 px-4 py-4 text-neutral-900 shadow-[4px_5px_0_#111827]" role="status">
-      <p class="text-xl font-black">Daily Dex complete!</p>
-      <p class="mt-1 text-lg font-bold text-indigo-800">{getTrainerRank(gameState.numOfRightAnswer, DAILY_LENGTH)}</p>
-      <p class="mt-2 text-base">{gameState.points} points · {gameState.numOfRightAnswer}/{DAILY_LENGTH} correct</p>
-      <p class="mt-2 text-2xl" aria-label="Your five daily results">{gameState.dailyStatus?.marks.join('') ?? ''}</p>
-      <p class="mt-2 text-xs">Green = correct, yellow = hinted, dark = missed. Your daily result is saved on this device.</p>
-    </div>
-  {:else if gameState.numOfQuestions > 0}
-    <div class="rounded-2xl border-4 border-neutral-900 bg-white/95 px-4 py-3 text-neutral-900 shadow-[4px_5px_0_#111827]" role="status">
-      <p class="text-lg font-black">{gameState.completed ? 'Challenge complete!' : 'Nice run, Trainer!'}</p>
-      <p class="mt-1 text-base">{gameState.points} points · {gameState.numOfRightAnswer}/{gameState.numOfQuestions} correct · Best streak {gameState.bestStreak}</p>
-      {#if gameState.mode === 'challenge' && !gameState.completed}
-        <p class="mt-1 text-sm">Finish all ten rounds to set a personal best.</p>
-      {/if}
-      {#if gameState.mode === 'challenge'}
-        <p class="mt-1 text-sm font-bold">Challenge best: {gameState.bestChallengeScore} pts</p>
-      {/if}
-    </div>
-  {:else}
-    <div class="rounded-2xl border-4 border-neutral-900 bg-white/95 px-4 py-3 text-neutral-900 shadow-[4px_5px_0_#111827]">
-      <p class="text-lg font-black">Spot the silhouette. Build a streak.</p>
-      <p class="mt-1 text-sm sm:text-base">Pick a game mode, discover Pokémon, and earn bonus points as your streak grows. No timer, no pressure.</p>
-      {#if gameState.bestChallengeScore > 0}
-        <p class="mt-2 text-sm font-bold text-emerald-800">Challenge best: {gameState.bestChallengeScore} pts</p>
-      {/if}
-    </div>
-  {/if}
-</div>
-
-<section class="mx-auto grid w-full max-w-3xl grid-cols-2 gap-2 px-3 sm:gap-4 sm:px-4" aria-label="Game controls">
-  {#if !gameState.pokemon}
-    {#if gameState.completed && gameState.mode === 'daily'}
-      <button onclick={shareDailyResult} class="btn col-span-2 min-h-[48px] bg-emerald-500 border-b-emerald-700 text-white">Share Daily Result</button>
-    {/if}
-    {#if !dailyFinished}
-      <button onclick={() => begin('daily')} class="btn col-span-2 min-h-[56px] bg-yellow-300 border-b-amber-600 text-neutral-900">
-        Daily Dex · {gameState.dailyStatus?.guesses.length ? 'Resume ' + gameState.dailyStatus.guesses.length + '/5' : '5 fresh mysteries'}
-      </button>
-    {:else if !(gameState.completed && gameState.mode === 'daily')}
-      <div class="col-span-2 rounded-xl border-2 border-neutral-900 bg-emerald-100 px-3 py-3 text-center text-neutral-900">
-        <p class="font-black">Today's Daily Dex: Completed</p>
-        <p class="mt-1 text-sm">{gameState.dailyStatus?.correct}/5 correct · {gameState.dailyStatus?.points} points</p>
-        <button onclick={shareDailyResult} class="btn mt-2 bg-emerald-500 border-b-emerald-700 text-white">Share Result</button>
-      </div>
-    {/if}
-    <button onclick={() => begin('classic')} class="btn min-h-[48px] bg-emerald-500 border-b-emerald-700 text-white">Free Play</button>
-    <button onclick={() => begin('challenge')} class="btn min-h-[48px] bg-indigo-500 border-b-indigo-700 text-white">10-Round Challenge</button>
-    <button onclick={() => (gameState.showSelectGenerations = true)} class="btn col-span-2 min-h-[48px] bg-pink-500 border-b-pink-700 text-white">
-      Choose Generations ({gameState.selectedGenerations.length} selected)
-    </button>
-    <p class="col-span-2 text-center text-xs font-semibold text-white/90">
-      Daily Dex uses the same five Pokémon worldwide (all eight generations). New puzzle at 00:00 UTC.
-    </p>
-  {:else}
-    {#each gameState.choices as choice, i}
-      <button
-        onclick={() => answerPokemon(choice)}
-        disabled={!gameState.hidePokemon || gameState.eliminatedChoices.includes(choice)}
-        aria-keyshortcuts={String(i + 1)}
-        aria-label={'Answer ' + (i + 1) + ': ' + choice}
-        class="btn min-h-[48px] {gameState.eliminatedChoices.includes(choice) && gameState.hidePokemon ? 'line-through' : ''}"
-        class:btn-correct={!gameState.hidePokemon && choice === gameState.pokemon.name}
-        class:btn-wrong={!gameState.hidePokemon && choice === gameState.lastAnswer && !correctGuess}
-        class:btn-disable={gameState.eliminatedChoices.includes(choice)}
-      >
-        <span class="mr-1 text-[10px] opacity-60 sm:text-xs" aria-hidden="true">{i + 1}.</span>{choice}
-      </button>
-    {/each}
-    {#if gameState.hidePokemon}
-      <button onclick={useHint} disabled={gameState.hintUsed} class="btn min-h-[48px] bg-amber-300 border-b-amber-600" class:btn-disable={gameState.hintUsed}>
-        {gameState.hintUsed ? 'Hint Used' : '50/50 Hint'}
-      </button>
-      <button onclick={endGame} class="btn min-h-[48px] bg-sky-500 border-b-sky-700 text-white">{gameState.mode === 'daily' ? 'Save & Exit' : 'End Run'}</button>
-    {:else}
-      <div class="col-span-2 rounded-xl border-2 border-neutral-900 px-3 py-3 text-sm font-bold shadow-[2px_3px_0_#111827] sm:text-base {correctGuess ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'}" role="status" aria-live="polite">
-        {#if correctGuess}
-          That's right! +{gameState.lastPoints} pts{gameState.streak >= 3 ? ' · ' + gameState.streak + '-answer combo!' : ''}
-        {:else}
-          Not quite! It was {gameState.pokemon.name}. Give the next one a try!
-        {/if}
-      </div>
-      <button onclick={nextRound} class="btn col-span-2 min-h-[48px] bg-sky-500 border-b-sky-700 text-white">
-        {gameState.completed ? 'See Results' : 'Next Pokémon'}
-      </button>
-    {/if}
-  {/if}
-</section>
-
-{#if shareStatus}
-  <div class="mx-auto w-full max-w-3xl px-3 text-center" role="status" aria-live="polite">
-    <p class="rounded-xl bg-white px-3 py-2 text-sm font-bold text-neutral-900">{shareStatus}</p>
-    {#if fallbackShareText}
-      <textarea readonly aria-label="Copyable Daily Dex result" class="mt-2 w-full rounded-lg border-2 border-neutral-900 bg-white p-3 text-sm text-neutral-900" rows="5">{fallbackShareText}</textarea>
-    {/if}
-  </div>
+    <button class="collection-banner" onclick={()=>gameState.showPokedex=true}><span aria-hidden="true">◉</span><span><strong>My Pokédex</strong><small>{gameState.profile.discovered.length} / 898 species discovered · View awards</small></span><span aria-hidden="true">→</span></button>
+  </section>
 {/if}
-
-{#if gameState.pokemon}
-  <p class="px-4 text-center text-xs font-semibold text-white/90 sm:text-sm">
-    {gameState.hidePokemon ? 'Press 1–' + gameState.choices.length + ' to guess. Hints halve the points for that round.' : 'Press Enter or tap Next to continue.'}
-  </p>
-{/if}
+{#if shareStatus}<div class="share-status" role="status">{shareStatus}{#if copyResult}<textarea rows="5" readonly aria-label="Copyable Daily Dex result">{copyResult}</textarea>{/if}</div>{/if}

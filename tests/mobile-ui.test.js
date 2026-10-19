@@ -1,43 +1,46 @@
-// @ts-nocheck - Node regression checks, not browser-side code.
+// @ts-nocheck - focused markup regressions; full interactions in mobile_playwright.py
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+const page=readFileSync('src/routes/+page.svelte','utf8');
+const image=readFileSync('src/lib/components/PokemonImage.svelte','utf8');
+const control=readFileSync('src/lib/components/Control.svelte','utf8');
+const styles=readFileSync('src/app.css','utf8');
+const gen=readFileSync('src/lib/components/SelectGenerations.svelte','utf8');
+const oak=readFileSync('src/lib/components/ProfessorOak.svelte','utf8');
 
-const page = readFileSync('src/routes/+page.svelte','utf8');
-const header = readFileSync('src/lib/components/Header.svelte','utf8');
-const image = readFileSync('src/lib/components/PokemonImage.svelte','utf8');
-const control = readFileSync('src/lib/components/Control.svelte','utf8');
-const styles = readFileSync('src/app.css','utf8');
-const gen = readFileSync('src/lib/components/SelectGenerations.svelte','utf8');
-const oak = readFileSync('src/lib/components/ProfessorOak.svelte','utf8');
-
-test('game content can grow taller than the viewport and scroll naturally',()=>{
- assert.match(page,/min-h-dvh/);
- assert.doesNotMatch(page,/class="h-screen[^"]*overflow-y-auto"/);
- assert.doesNotMatch(page,/container h-screen/);
- assert.doesNotMatch(page,/scrollTo\(0,\s*1\)/);
+test('arcade layout scrolls normally instead of trapping content in the viewport',()=>{
+  assert.match(page,/class="site-shell"/);
+  assert.doesNotMatch(page,/overflow-hidden\s+h-screen/);
+  assert.match(styles,/min-height:100dvh/);
+  assert.match(styles,/overflow-x:hidden/);
 });
-test('answers are in a compact two-column mobile grid with usable hit areas',()=>{
- assert.match(control,/grid-cols-2/);
- assert.match(control,/min-h-\[48px\]/);
+test('mobile answers use a two-column grid and a usable tap size',()=>{
+  assert.match(control,/class="answers-grid"/);
+  assert.match(styles,/\.answers-grid\{display:grid;grid-template-columns:1fr 1fr/);
+  assert.match(styles,/\.answer-option\{min-height:72px/);
 });
-test('hidden Pokémon is drawn as a mask, never as a previewable color image',()=>{
- assert.match(image,/class="pokemon-silhouette\b/);
- assert.match(image,/mask-image/);
- assert.match(image,/\{#if gameState.hidePokemon\}/);
- assert.match(image,/-webkit-touch-callout:\s*none/);
+test('mystery is a CSS mask and revealed color art is gated by answer state',()=>{
+  assert.match(image,/mystery-silhouette/);
+  assert.match(image,/mask-image:var\(--sprite-mask\)/);
+  assert.match(image,/\{#if gameState.hidePokemon\}/);
+  assert.match(image,/\{:else\}\s*<div class="reveal-rings"/);
+  assert.match(image,/role="img" aria-label="Mystery Pokémon silhouette"/);
 });
-test('header height is controlled by its responsive element, not an overriding class',()=>{
- assert.match(header,/h-20/);
- assert.doesNotMatch(styles,/\.header\s*\{[^}]*@apply h-full/);
+test('daily, gym, collection and settings are reachable from home',()=>{
+  assert.match(control,/Daily Dex/);
+  assert.match(control,/Gym Trials/);
+  assert.match(page,/Pokedex/);
+  assert.match(page,/GameSettings/);
+  assert.match(control,/getGym/);
 });
-test('generation picker and Oak dialog can scroll on short mobile screens',()=>{
- assert.match(gen,/max-h-\[calc\(100dvh-2rem\)\]/);
- assert.match(gen,/overflow-y-auto/);
- assert.match(oak,/overflow-y-auto/);
+test('user settings and system reduced-motion are respected',()=>{
+  assert.match(styles,/prefers-reduced-motion:reduce/);
+  assert.match(page,/data-motion=/);
+  assert.match(page,/Open game settings/);
 });
-
-test('start-screen question mark cannot exceed the mobile image stage height',()=>{
- assert.match(image,/text-\[clamp\(80px,20dvh,160px\)\]/);
- assert.match(image,/leading-none/);
+test('existing generation picker and Professor Oak still scroll on short phones',()=>{
+  assert.match(gen,/max-h-\[calc\(100dvh-2rem\)\]/);
+  assert.match(gen,/overflow-y-auto/);
+  assert.match(oak,/overflow-y-auto/);
 });
