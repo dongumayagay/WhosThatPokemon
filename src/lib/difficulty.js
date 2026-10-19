@@ -1,6 +1,9 @@
 import silhouettes from './silhouette-data.json' with { type: 'json' };
 import { silhouetteDistance } from './silhouette-math.js';
 
+/** @type {Array<[string, number] | null>} */
+const spriteShapes = /** @type {Array<[string, number] | null>} */(/** @type {unknown} */(silhouettes));
+
 // Fallback only for sprites not represented in the generated silhouette dataset.
 export const LOOKALIKE_GROUPS = [
   [25,26,172,311,312,417,587,702,777],
@@ -41,7 +44,7 @@ function shuffle(items, random) {
  * @param {number[]} counts
  * @param {Array<[string, number] | null>} shapes
  */
-export function rankSilhouetteDecoys(target, pool, counts, shapes = silhouettes) {
+export function rankSilhouetteDecoys(target, pool, counts, shapes = spriteShapes) {
   const group = LOOKALIKE_GROUPS.find(g => g.includes(target)) || [];
   const g = generationOf(target, counts);
   const targetShape = shapes[target];
@@ -76,7 +79,7 @@ function chooseWindow(sorted, mode, count, random) {
  * @param {() => number} [random]
  * @param {Array<[string, number] | null>} [shapes]
  */
-export function createDifficultyChoices(correctId, availableIds, generationCounts, difficulty, random = Math.random, shapes = silhouettes) {
+export function createDifficultyChoices(correctId, availableIds, generationCounts, difficulty, random = Math.random, shapes = spriteShapes) {
   const count = difficulty === 'easy' ? 3 : 4;
   const pool = [...new Set(availableIds)];
   if (!pool.includes(correctId) || pool.length < count || !['easy','normal','expert'].includes(difficulty)) throw new RangeError('Not enough eligible choices');

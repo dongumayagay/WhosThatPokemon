@@ -18,7 +18,7 @@ The previous Vercel URL, https://wtp.vercel.app, may continue serving the older 
 - See live round progress, score, streak, results, Trainer ranks and immediate correct/wrong feedback.
 - Daily Dex progress automatically saves on your device so you can resume after refreshing, and you can **share a spoiler-free color-grid result** (green = correct, yellow = correct with hint, dark = missed).
 - No timers, social accounts, paid APIs or extra dependencies for the game.
-- Press **1**–**3** (or **1**–**4** in Daily Dex) to guess, then **Enter** to continue, or use touch-friendly buttons.
+- Press **1**–**3** in Easy mode or **1**–**4** in Normal, Expert, and Daily Dex to guess, then **Enter** to continue, or use touch-friendly buttons.
 - Open **Professor Oak** for one Pokémon question and one speech-bubble answer, without any chat thread or API key.
 
 For a broader Pokédex, team builder, and a newer guessing-game implementation, see the separate [Pokémo](https://github.com/dongumayagay/pokemo) project and its [live site](https://pokemo.pages.dev).
@@ -57,7 +57,7 @@ Professor Oak displays exactly one answer at a time. The browser sends a single 
 
 ## Mobile and browser regression checks
 
-The game has a naturally scrolling mobile layout, responsive game stage and two-column answer buttons that remain usable on short phones. Before the answer is revealed, the Pokémon is rendered using a CSS silhouette mask rather than a previewable color image, preventing casual native long-press image previews. The choices are sampled without replacement, so there are always three different names. It is not designed to prevent a determined player using browser developer tools to identify the Pokémon.
+The game has a naturally scrolling mobile layout, responsive game stage and two-column answer buttons that remain usable on short phones. Before the answer is revealed, the Pokémon is rendered using a CSS silhouette mask rather than a previewable color image, preventing casual native long-press image previews. The answer choices are sampled without replacement, with three or four distinct names depending on mode. It is not designed to prevent a determined player using browser developer tools to identify the Pokémon.
 
 Run the Node regression suite with `node --test tests/*.test.js`. A separate manual Playwright suite validates real browser layouts and interactions:
 
