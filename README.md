@@ -8,9 +8,12 @@ The previous Vercel URL, https://wtp.vercel.app, may continue serving the older 
 
 ## Features
 
-- Guess Pokémon from their silhouettes in a multiple-choice game.
-- Choose Pokémon generations **I–VIII** (the current standalone game's dataset covers 898 Pokémon).
-- See your results and score after each round.
+- Play **Free Play** (unlimited rounds) or a **10-Round Challenge** with a clear finish line.
+- Build answer streaks for **100–200 points per correct answer**, with a personal-best Challenge score saved locally on your device.
+- Use one **50/50 hint per round** to remove a wrong option; hinted correct answers earn half points.
+- Choose Pokémon generations **I–VIII** (898 Pokémon). Encounters do not repeat until the selected pool is exhausted, and wrong choices come from the selected generations.
+- See live round progress, score, streak, results, and immediate correct/wrong feedback.
+- Press **1**, **2**, or **3** to guess, then **Enter** to continue, or use touch-friendly buttons.
 - Open **Professor Oak** for one Pokémon question and one speech-bubble answer, without any chat thread or API key.
 
 For a broader Pokédex, team builder, and a newer guessing-game implementation, see the separate [Pokémo](https://github.com/dongumayagay/pokemo) project and its [live site](https://pokemo.pages.dev).

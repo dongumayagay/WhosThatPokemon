@@ -27,3 +27,18 @@ export function createChoiceIds(correctId, total, random = Math.random) {
   }
   return picked;
 }
+
+/**
+ * Limit distractors to the player's selected generations.
+ * @param {number} correctId
+ * @param {number[]} availableIds
+ * @param {() => number} [random]
+ */
+export function createChoiceIdsFromPool(correctId, availableIds, random = Math.random) {
+  const uniqueIds = [...new Set(availableIds)];
+  const correctIndex = uniqueIds.indexOf(correctId);
+  if (correctIndex === -1 || uniqueIds.length < 3) {
+    throw new RangeError('At least three eligible Pokémon, including the answer, are required.');
+  }
+  return createChoiceIds(correctIndex + 1, uniqueIds.length, random).map((index) => uniqueIds[index - 1]);
+}
