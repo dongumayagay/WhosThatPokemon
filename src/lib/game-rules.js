@@ -10,6 +10,7 @@ export const DAILY_LENGTH = 5;
  */
 export function getEligiblePokemonIds(generations, counts) {
   const selected = new Set(generations);
+  /** @type {number[]} */
   const ids = [];
   let offset = 0;
   counts.forEach((count, index) => {
@@ -35,21 +36,21 @@ export function pickUnseenPokemonId(eligibleIds, usedIds, random = Math.random) 
   return pool[Math.min(pool.length - 1, Math.max(0, Math.floor(random() * pool.length)))];
 }
 
-/** Correct answers earn 100-200 points, or half after using a hint. */
+/** @param {number} streak @param {boolean} usedHint */
 export function calculateAnswerPoints(streak, usedHint) {
   if (streak <= 0) return 0;
   const base = 100 + Math.min(streak - 1, 4) * 25;
   return Math.round(base * (usedHint ? 0.5 : 1));
 }
 
-/** Disable one wrong answer without revealing the correct one. */
+/** @param {string[]} choices @param {string} correctName @param {() => number} [random] */
 export function chooseEliminatedChoice(choices, correctName, random = Math.random) {
   const wrong = choices.filter((choice) => choice !== correctName);
   if (wrong.length === 0) return null;
   return wrong[Math.min(wrong.length - 1, Math.max(0, Math.floor(random() * wrong.length)))];
 }
 
-/** Eliminate wrong answers until exactly two choices remain. */
+/** @param {string[]} choices @param {string} correctName @param {() => number} [random] */
 export function chooseEliminatedChoices(choices, correctName, random = Math.random) {
   const wrong = [...new Set(choices.filter((choice) => choice !== correctName))];
   const disabled = [];
@@ -63,7 +64,7 @@ export function chooseEliminatedChoices(choices, correctName, random = Math.rand
 /**
  * Resolve a single guess without mutating the input state.
  * Returning null makes double-submission and disabled hints harmless.
- * @param {{pokemon: {id:number,name:string} | null, hidePokemon:boolean, choices:string[], eliminatedChoice:string | null, numOfQuestions:number, numOfRightAnswer:number, points:number, streak:number, bestStreak:number, hintUsed:boolean, mode:string}} state
+ * @param {{pokemon: {id:number,name:string} | null, hidePokemon:boolean, choices:string[], eliminatedChoice:string | null, eliminatedChoices?:string[], numOfQuestions:number, numOfRightAnswer:number, points:number, streak:number, bestStreak:number, hintUsed:boolean, mode:string}} state
  * @param {string} answer
  */
 export function resolveAnswer(state, answer) {

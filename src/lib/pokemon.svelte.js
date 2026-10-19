@@ -18,7 +18,7 @@ function eligiblePokemon() {
   return getEligiblePokemonIds(generations, maxPokemonPerGeneration);
 }
 
-/** Read and validate saved guesses; no user login or server state required. */
+/** @param {string} date @param {Array<{id:number,choices:number[]}>} deck */
 function readDailyStatus(date, deck) {
   /** @type {Array<{choice:string,hintUsed:boolean}>} */
   let guesses = [];

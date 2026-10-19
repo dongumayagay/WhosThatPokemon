@@ -8,7 +8,7 @@ export function getUtcDateKey(date = new Date()) {
   return date.toISOString().slice(0, 10);
 }
 
-/** Portable date-seeded PRNG; no network or user tracking required. */
+/** @param {string} label */
 function seededRandom(label) {
   let hash = 2166136261;
   for (const character of label) {
@@ -92,7 +92,7 @@ export function summarizeDailyGuesses(guesses, deck, names) {
     completed: accepted.length === deck.length && deck.length === DAILY_LENGTH};
 }
 
-/** Positive, readable rank for accuracy, not game time. */
+/** @param {number} correct @param {number} [total] */
 export function getTrainerRank(correct, total = DAILY_LENGTH) {
   if (correct === total && total > 0) return 'Pokédex Master';
   if (correct >= total * 0.8) return 'Ace Trainer';
@@ -100,7 +100,7 @@ export function getTrainerRank(correct, total = DAILY_LENGTH) {
   return 'Rising Trainer';
 }
 
-/** Spoiler-free, opt-in sharing. Never includes Pokémon names or silhouettes. */
+/** @param {string} date @param {{correct:number, points:number, marks:string[]}} summary @param {string} url */
 export function formatDailyShare(date, summary, url) {
   const rank = getTrainerRank(summary.correct, DAILY_LENGTH);
   return `Who's That Pokémon? - Daily Dex ${date}\n${summary.marks.join('')}\n${summary.correct}/${DAILY_LENGTH} correct - ${summary.points} pts\n${rank}\n${url}`;

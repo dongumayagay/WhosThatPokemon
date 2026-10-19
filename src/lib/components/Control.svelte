@@ -25,6 +25,7 @@
     }
   }
 
+  /** @param {'classic' | 'challenge' | 'daily'} mode */
   function begin(mode) {
     shareStatus = '';
     fallbackShareText = '';

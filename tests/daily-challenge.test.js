@@ -14,6 +14,7 @@ import { chooseEliminatedChoices, resolveAnswer } from '../src/lib/game-rules.js
 const counts = [151, 100, 135, 107, 156, 72, 88, 89];
 const names = Array.from({ length: 898 }, (_, i) => `Pokemon-${i + 1}`);
 
+/** @param {number} id */
 function genOf(id) {
   let offset = 0;
   for (let i = 0; i < counts.length; i++) {
@@ -77,7 +78,7 @@ test('Daily correct guess on round five ends the daily run', () => {
 test('Resuming daily progress reconstructs score, streak and outcomes from valid answers', () => {
   const deck = createDailyDeck('2026-10-19', counts);
   const first = names[deck[0].id - 1];
-  const secondWrongId = deck[1].choices.find(id => id !== deck[1].id);
+  const secondWrongId = deck[1].choices.find(id => id !== deck[1].id) ?? deck[1].choices[0];
   const third = names[deck[2].id - 1];
   const guesses = [
     { choice:first, hintUsed:false },
