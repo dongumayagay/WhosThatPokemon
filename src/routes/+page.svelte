@@ -12,19 +12,28 @@
   onMount(loadGamePreferences);
 </script>
 <svelte:head>
-  <title>Who's That Pokémon? | Trainer Arcade</title>
-  <meta name="description" content="Guess Pokémon silhouettes, play Daily Dex, challenge eight Gyms and complete your personal Pokédex." />
+  <title>Who's That Pokémon? | Classic Silhouette Quiz</title>
+  <meta name="description" content="The classic anime-inspired Who’s That Pokémon? silhouette quiz: guess mysteries, conquer Gym Trials, play Daily Dex and collect your Pokédex." />
 </svelte:head>
-<div class="site-shell" data-motion={gameState.animationEnabled?'on':'off'}>
-  <div class="site-topbar"><div class="site-identity"><span class="identity-ball" aria-hidden="true">◉</span><strong>WTP <span>ARCADE</span></strong></div>
+<div class="site-shell" data-visual="classic-eyecatch" data-motion={gameState.animationEnabled?'on':'off'}>
+  <div class="site-topbar"><div class="site-identity"><span class="identity-ball" aria-hidden="true">◓</span><strong>WTP <span>CLASSIC</span></strong></div>
     <nav class="top-actions" aria-label="Game features">
       <button onclick={()=>gameState.showPokedex=true} aria-label="Open personal Pokédex">◫ <span>Pokédex</span></button>
       <button onclick={()=>gameState.showSettings=true} aria-label="Open game settings">⚙ <span>Settings</span></button>
       <button onclick={()=>gameState.showProfessorOak=true} aria-label="Ask Professor Oak">? <span>Prof. Oak</span></button>
     </nav>
   </div>
-  <main class="arcade-main"><Header/><PokemonImage/><Control/></main>
-  <footer class="game-footer">FAN-MADE POKÉMON TRIVIA · MADE FOR TRAINERS · NOT AFFILIATED WITH THE POKÉMON COMPANY</footer>
+  <main class="arcade-main">
+    <Header/>
+    <div class="play-layout">
+      <div class="stage-column">
+        <PokemonImage/>
+        <p class="broadcast-strip" aria-hidden="true">{gameState.pokemon ? gameState.hidePokemon ? '✦ LOOK CLOSELY · MAKE YOUR GUESS ✦' : '✦ THE MYSTERY IS REVEALED! ✦' : '✦ THE CLASSIC SILHOUETTE CHALLENGE ✦'}</p>
+      </div>
+      <div class="control-zone"><Control/></div>
+    </div>
+  </main>
+  <footer class="game-footer">CLASSIC MYSTERY, MODERN PLAY · UNOFFICIAL FAN GAME · NOT AFFILIATED WITH THE POKÉMON COMPANY</footer>
   {#if gameState.showSelectGenerations}<SelectGenerations/>{/if}
   {#if gameState.showProfessorOak}<ProfessorOak/>{/if}
   {#if gameState.showPokedex}<Pokedex/>{/if}

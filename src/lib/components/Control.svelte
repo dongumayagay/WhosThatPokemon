@@ -66,7 +66,7 @@
   {#if totalRounds}
     <div class="run-progress" role="progressbar" aria-label="Challenge progress" aria-valuenow={gameState.numOfQuestions} aria-valuemin="0" aria-valuemax={totalRounds}><div style:width={(100*gameState.numOfQuestions/totalRounds)+'%'}></div></div>
   {/if}
-  <div class="answer-heading"><div><p class="eyebrow">MAKE YOUR GUESS</p><h2>Who is this Pokémon?</h2></div>{#if gameState.hidePokemon}<span class="answer-help">{gameState.choices.length} possible answers</span>{/if}</div>
+  <div class="answer-heading"><div><p class="eyebrow">MAKE YOUR GUESS</p><h2>Make your guess!</h2></div>{#if gameState.hidePokemon}<span class="answer-help">{gameState.choices.length} possible answers</span>{/if}</div>
   <div class="answers-grid" role="group" aria-label="Choose the Pokémon">
     {#each gameState.choices as choice,i}
       <button
@@ -88,12 +88,12 @@
   {:else}
     <div class="answer-feedback" class:was-correct={correctGuess} role="status" aria-live="polite">
       <span class="feedback-symbol" aria-hidden="true">{correctGuess?'✓':'✕'}</span>
-      <div><strong>{correctGuess?'Excellent catch!':'Mystery solved!'}</strong><p>{correctGuess?'+'+gameState.lastPoints+' points'+(gameState.streak>=3?' · '+gameState.streak+'-answer combo!':''):'It was '+gameState.pokemon.name+'. You’ll get the next one!'}</p></div>
+      <div><strong>{correctGuess?'You got it!':'It's revealed!'}</strong><p>{correctGuess?'+'+gameState.lastPoints+' points'+(gameState.streak>=3?' · '+gameState.streak+'-answer combo!':''):'It was '+gameState.pokemon.name+'. You’ll get the next one!'}</p></div>
     </div>
     {#if newlyEarned.length}
       <div class="award-toast" role="status">✦ Unlocked: {newlyEarned.join(', ')}!</div>
     {/if}
-    <button class="primary-button next-button" onclick={nextRound}>{gameState.completed?'See your results':'Next mystery'} <span aria-hidden="true">→</span></button>
+    <button class="primary-button next-button" onclick={nextRound}>{gameState.completed?'See your results':'Next Pokémon'} <span aria-hidden="true">→</span></button>
   {/if}
   <p class="keyboard-help">{gameState.hidePokemon?'PRESS 1–'+gameState.choices.length+' TO GUESS':'PRESS ENTER TO CONTINUE'}</p>
 {:else}
@@ -115,16 +115,16 @@
       <button class="secondary-button" onclick={()=>{gameState.showPokedex=true;}}>View my Pokédex →</button>
     </section>
   {:else}
-    <div class="home-intro"><p class="eyebrow">THE ULTIMATE SILHOUETTE CHALLENGE</p><h2>Think you know every Pokémon?</h2><p>Guess the shadow. Build your streak. Become a Pokédex legend.</p></div>
+    <div class="home-intro"><p class="eyebrow">THE CLASSIC GUESSING GAME</p><h2>One silhouette. One big reveal.</h2><p>Recognize the Pokémon before the answer appears — just like the anime. Choose how you want to play.</p></div>
   {/if}
   <section class="mode-area" aria-label="Choose a game mode">
     <button class="daily-card" onclick={()=>begin('daily')} disabled={dailyFinished}>
-      <span class="daily-orb" aria-hidden="true">✦</span><span class="daily-copy"><span class="eyebrow">A FRESH PUZZLE EVERY DAY</span><strong>Daily Dex</strong><small>{dailyFinished?'Completed today · Come back tomorrow':gameState.dailyStatus?.guesses.length?'Continue '+gameState.dailyStatus.guesses.length+'/5 questions':'5 worldwide mysteries · Same puzzle for everyone'}</small></span><span class="daily-arrow" aria-hidden="true">{dailyFinished?'✓':'→'}</span>
+      <span class="daily-orb" aria-hidden="true">✦</span><span class="daily-copy"><span class="eyebrow">A FRESH PUZZLE EVERY DAY</span><strong>Daily Dex</strong><small>{dailyFinished?'Completed today · Come back tomorrow':gameState.dailyStatus?.guesses.length?'Continue '+gameState.dailyStatus.guesses.length+'/5 questions':'5 classic mysteries · Same puzzle for everyone'}</small></span><span class="daily-arrow" aria-hidden="true">{dailyFinished?'✓':'→'}</span>
     </button>
     {#if dailyFinished}<button class="secondary-button share-home" onclick={shareDaily}>↗ Share today’s result</button>{/if}
     <div class="game-mode-grid">
-      <button class="mode-card free-card" onclick={()=>begin('classic')}><span class="mode-icon" aria-hidden="true">∞</span><span><strong>Free Play</strong><small>Infinite mysteries, zero pressure</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
-      <button class="mode-card challenge-card" onclick={()=>begin('challenge')}><span class="mode-icon" aria-hidden="true">★</span><span><strong>10-Round Challenge</strong><small>Chase your personal best</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
+      <button class="mode-card free-card" onclick={()=>begin('classic')}><span class="mode-icon" aria-hidden="true">∞</span><span><strong>Free Play</strong><small>Keep the mystery going</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
+      <button class="mode-card challenge-card" onclick={()=>begin('challenge')}><span class="mode-icon" aria-hidden="true">★</span><span><strong>10-Round Challenge</strong><small>Ten reveals. Your best score.</small></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
     </div>
     <div class="difficulty-panel"><div><strong>Choose your difficulty</strong><small>{gameState.difficulty==='easy'?'3 choices · contrasting silhouettes':gameState.difficulty==='normal'?'4 choices · moderately similar shapes':'4 choices · closest-looking shapes'} · Daily Dex is fixed</small></div><div class="difficulty-segments" role="group" aria-label="Difficulty">
       {#each ['easy','normal','expert'] as level}

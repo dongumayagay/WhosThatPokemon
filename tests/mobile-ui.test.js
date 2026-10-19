@@ -22,10 +22,10 @@ test('mobile answers use a two-column grid and a usable tap size',()=>{
 });
 test('mystery is a CSS mask and revealed color art is gated by answer state',()=>{
   assert.match(image,/mystery-silhouette/);
-  assert.match(image,/mask-image:var\(--sprite-mask\)/);
+  assert.match(image,/mask-image:\s*var\(--sprite-mask\)/);
   assert.match(image,/\{#if gameState.hidePokemon\}/);
   assert.match(image,/\{:else\}\s*<div class="reveal-rings"/);
-  assert.match(image,/role="img" aria-label="Mystery Pokémon silhouette"/);
+  assert.match(image,/role="img"\s+aria-label="Mystery Pokémon silhouette"/);
 });
 test('daily, gym, collection and settings are reachable from home',()=>{
   assert.match(control,/Daily Dex/);
