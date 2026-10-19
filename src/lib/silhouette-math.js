@@ -14,6 +14,8 @@ const popcount = Uint8Array.from({ length: 256 }, (_, i) => {
 const decoded = new Map();
 /** @type {Map<string, Uint8Array>} */
 const reflected = new Map();
+/** @type {Map<string, Uint8Array[]>} */
+const translated = new Map();
 /** @param {Uint8Array | number[]} bitmap @param {number} width @param {number} height */
 export function encodeSilhouette(bitmap, width, height) {
   if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1 ||
@@ -75,6 +77,34 @@ function mirroredBytes(entry) {
   }
   return result;
 }
+/**
+ * A one-pixel translation tolerance prevents nearest-neighbor sampling from
+ * penalizing two essentially identical outlines for rounding offsets.
+ * @param {[string,number]} entry
+ * @param {boolean} mirror
+ */
+function nearAlignments(entry, mirror) {
+  const key = (mirror ? 'M' : 'N') + entry[0];
+  let variants = translated.get(key);
+  if (variants) return variants;
+  const source = mirror ? mirroredBytes(entry) : bytes(entry);
+  variants = [];
+  for (let dy=-1;dy<=1;dy++) for (let dx=-1;dx<=1;dx++) {
+    const shifted = new Uint8Array(BYTE_COUNT);
+    for (let y=0;y<SHAPE_SIZE;y++) for (let x=0;x<SHAPE_SIZE;x++) {
+      const destinationX = x+dx, destinationY = y+dy;
+      if(destinationX<0||destinationX>=SHAPE_SIZE||destinationY<0||destinationY>=SHAPE_SIZE) continue;
+      const position = y*SHAPE_SIZE+x;
+      if(source[position>>3] & (1 << (7-position%8))) {
+        const destination = destinationY*SHAPE_SIZE+destinationX;
+        shifted[destination>>3] |= 1 << (7-destination%8);
+      }
+    }
+    variants.push(shifted);
+  }
+  translated.set(key, variants);
+  return variants;
+}
 /** @param {Uint8Array} first @param {Uint8Array} second */
 function pixelDifference(first, second) {
   let union = 0, difference = 0;
@@ -89,8 +119,9 @@ function pixelDifference(first, second) {
 export function silhouetteDistance(a, b) {
   if (!Array.isArray(a) || !Array.isArray(b) ||
       !Number.isFinite(a[1]) || !Number.isFinite(b[1]) || a[1] <= 0 || b[1] <= 0) return Infinity;
-  const direct = pixelDifference(bytes(a), bytes(b));
-  const mirrored = pixelDifference(mirroredBytes(a), bytes(b)) + .015;
+  const target=bytes(b);
+  const direct = Math.min(...nearAlignments(a,false).map(variant=>pixelDifference(variant,target)));
+  const mirrored = Math.min(...nearAlignments(a,true).map(variant=>pixelDifference(variant,target))) + .015;
   const aspect = Math.min(1, Math.abs(Math.log(a[1] / b[1])));
   return Math.min(direct, mirrored) + .15 * aspect;
 }

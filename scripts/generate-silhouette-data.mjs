@@ -52,4 +52,4 @@ await mkdir('src/lib',{recursive:true});
 await mkdir('static',{recursive:true});
 await writeFile('src/lib/silhouette-data.json',json+'\n','utf8');
 // One-time staging export. Remove after the versioned data is committed.
-await writeFile('static/__silhouette-dataset.json',json+'\n','utf8');
+if(process.env.SHAPE_STAGING_EXPORT==='1') await writeFile('static/__silhouette-dataset.json',json+'\n','utf8');

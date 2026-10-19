@@ -13,6 +13,8 @@ const squareTwin = shape(['..........','..######..','..######..','..######..','.
 const thin = shape(['..........','....##....','....##....','....##....','....##....','..........']);
 const wings = shape(['##......##','####..####','..######..','....##....','....##....','..........']);
 const mirroredWing = shape(['##......##','####..####','..######..','....##....','....##....','..........']);
+const rightFacing = shape(['##........','####......','.#####....','..####....','...##.....','..........']);
+const leftFacing = shape(['........##','......####','....#####.','....####..','.....##...','..........']);
 const tall = shape(['...#...','...#...','...#...','...#...','...#...','...#...','...#...','...#...']);
 const bar = shape(['........','..####..','..####..','........']);
 
@@ -31,6 +33,7 @@ test('shape distance compares pixels, not Pokédex IDs', () => {
 });
 test('shape matching allows flipped poses but still respects aspect ratio', () => {
   assert.ok(silhouetteDistance(wings,mirroredWing)<0.02);
+  assert.ok(silhouetteDistance(rightFacing,leftFacing)<0.08,'flipped silhouettes should match');
   assert.ok(silhouetteDistance(tall,bar)>silhouetteDistance(square,squareTwin));
 });
 test('three difficulty tiers pick harder-looking distractors from same pool', () => {
@@ -65,4 +68,28 @@ test('missing shapes produce safe same-generation fallback, not incorrect data',
   assert.ok(result.includes(25));
   assert.equal(new Set(result).size,4);
   assert.throws(()=>createDifficultyChoices(25,[25,26],[], 'expert',Math.random,[]),RangeError);
+});
+
+import realShapes from '../src/lib/silhouette-data.json' with {type:'json'};
+
+test('the shipped similarity index covers all 898 supported Pokémon',()=>{
+  assert.equal(realShapes.length,899);
+  for(let id=1;id<=898;id++){
+    assert.equal(typeof realShapes[id]?.[0],'string',`missing shape for #${id}`);
+    assert.equal(realShapes[id][0].length,96);
+    assert.ok(realShapes[id][1]>0);
+  }
+});
+test('on real sprites, Expert decoys have closer shapes than Normal and Easy',()=>{
+  const all=Array.from({length:898},(_,i)=>i+1);
+  const counts=[151,100,135,107,156,72,88,89];
+  for(const target of [1,25,94,150,259,384,650,898]){
+    const rank={};
+    for(const tier of ['easy','normal','expert']){
+      const choices=createDifficultyChoices(target,all,counts,tier,()=>0.48,realShapes);
+      rank[tier]=choices.filter(id=>id!==target).reduce((sum,id)=>sum+silhouetteDistance(realShapes[target],realShapes[id]),0)/(choices.length-1);
+    }
+    assert.ok(rank.expert<rank.normal,`${target} expert must be closer than normal`);
+    assert.ok(rank.normal<rank.easy,`${target} normal must be closer than easy`);
+  }
 });
