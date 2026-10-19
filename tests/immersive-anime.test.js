@@ -21,7 +21,7 @@ test('single immersive 4:3 interstitial with animated vector starburst and speed
 
 test('mystery silhouette transitions to real color sprite only after answering',()=>{
   assert.match(stage,/class="mystery-silhouette"/);
-  assert.match(stage,/mask-image:\s*var\(--sprite-mask\)/);
+  assert.match(styles,/mask-image:\s*var\(--sprite-mask\)/);
   assert.match(stage,/\{#if gameState\.hidePokemon\}/);
   assert.match(stage,/class="revealed-sprite"/);
   assert.match(stage,/class="reveal-flash"/);
@@ -37,7 +37,7 @@ test('only multiple-choice controls are under the stage, secondary modes live in
   assert.match(menu,/Daily Dex/);
   assert.match(menu,/Gym Trials/);
   assert.match(menu,/setDifficulty/);
-  assert.match(page,/Open personal Pokédex/);
+  assert.match(menu,/Open personal Pokédex/);
   assert.match(state,/showModes:\s*false/);
   assert.doesNotMatch(menu,/class="home-intro"/);
   assert.doesNotMatch(menu,/class="round-dashboard"/);

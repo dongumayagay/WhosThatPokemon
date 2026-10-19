@@ -13,7 +13,7 @@
     </div>
     <p class="muted-text">Your preferences stay on this device. No login needed.</p>
     <button class="setting-row" aria-pressed={gameState.soundEnabled} onclick={()=>setSound(!gameState.soundEnabled)}>
-      <span><strong>Arcade sounds</strong><small>Original synthesized feedback tones</small></span><span class="switch" class:enabled={gameState.soundEnabled}>{gameState.soundEnabled?'ON':'OFF'}</span>
+      <span><strong>Sound effects</strong><small>Original synthesized feedback tones</small></span><span class="switch" class:enabled={gameState.soundEnabled}>{gameState.soundEnabled?'ON':'OFF'}</span>
     </button>
     <button class="setting-row" aria-pressed={gameState.animationEnabled} onclick={()=>setAnimations(!gameState.animationEnabled)}>
       <span><strong>Reveal animations</strong><small>Reduced motion system setting is always respected</small></span><span class="switch" class:enabled={gameState.animationEnabled}>{gameState.animationEnabled?'ON':'OFF'}</span>
