@@ -785,3 +785,9 @@
 [data-motion='off'] .anime-question,
 [data-motion='off'] .silhouette-holder,
 [data-motion='off'] .anime-answer {animation:none!important;}
+
+/* Per-Pokémon transparent-margin normalization: true shape size, not 96px canvas padding. */
+.mystery-silhouette {
+  -webkit-mask-size: var(--sprite-fit, 152%);
+  mask-size: var(--sprite-fit, 152%);
+}

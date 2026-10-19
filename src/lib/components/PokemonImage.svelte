@@ -1,8 +1,10 @@
 <script>
   import { gameState } from '../state.svelte.js';
+  import { cropPokemonSprite } from '../sprite-frame.js';
 
   let imageStatus = $state('idle');
   let retryKey = $state(0);
+  let displaySpriteUrl = $state(/** @type {string | null} */(null));
   const spriteUrl = $derived(gameState.pokemonId
     ? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + gameState.pokemonId + '.png'
     : null);
@@ -13,17 +15,23 @@
     const src = spriteUrl;
     retryKey;
     gameState.spriteReady = false;
+    displaySpriteUrl = null;
     if (!src) { imageStatus = 'idle'; return; }
 
     imageStatus = 'loading';
     let active = true;
     const image = new Image();
     image.onload = () => {
-      if (active) { imageStatus = 'ready'; gameState.spriteReady = true; }
+      if (active) {
+        displaySpriteUrl = cropPokemonSprite(image) || src;
+        imageStatus = 'ready';
+        gameState.spriteReady = true;
+      }
     };
     image.onerror = () => {
       if (active) { imageStatus = 'error'; gameState.spriteReady = false; }
     };
+    image.crossOrigin = 'anonymous';
     image.src = src;
     return () => { active = false; };
   });
@@ -46,7 +54,7 @@
     {:else if imageStatus === 'ready'}
       {#if gameState.hidePokemon}
         <div class="silhouette-holder" role="img" aria-label="Mystery Pokémon silhouette"
-          style={'--sprite-mask:url("' + spriteUrl + '")'}>
+          style={'--sprite-mask:url("' + displaySpriteUrl + '");--sprite-fit:' + (displaySpriteUrl === spriteUrl ? '152%' : 'contain')}>
           <div class="mystery-silhouette"></div>
         </div>
         <svg class="anime-question" viewBox="0 0 150 240" aria-hidden="true" focusable="false">
@@ -57,7 +65,7 @@
       {:else}
         <div class="reveal-rings" aria-hidden="true"></div>
         <div class="reveal-flash" aria-hidden="true"></div>
-        <img class="revealed-sprite" src={spriteUrl} draggable="false"
+        <img class="revealed-sprite" src={displaySpriteUrl || spriteUrl} draggable="false"
           alt={'Revealed Pokémon: ' + gameState.pokemon.name} />
         <div class="anime-answer" role="status" aria-live="polite">
           <span>IT'S</span>
