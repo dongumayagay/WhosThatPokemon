@@ -31,7 +31,7 @@ test('mystery silhouette transitions to real color sprite only after answering',
 
 test('only multiple-choice controls are under the stage, secondary modes live in collapsed menu',()=>{
   assert.match(page,/<PokemonImage\s*\/>(.|\n)*<Control\s*\/>/);
-  assert.match(menu,/class="answers-grid"/);
+  assert.match(menu,/class="answers-grid anime-answers"/);
   assert.match(menu,/showModes/);
   assert.match(menu,/aria-modal="true"/);
   assert.match(menu,/Daily Dex/);
