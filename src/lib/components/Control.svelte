@@ -138,8 +138,10 @@
       </div>
     {/if}
     <div class="answers-grid anime-answers" role="group" aria-label="Choose the Pokémon">
-      {#each gameState.choices as choice, i}
-        <button
+      <div class="row g-2 wtp-answer-row">
+        {#each gameState.choices as choice, i}
+          <div class="col-6 col-md-3 wtp-answer-cell">
+            <button
           class="answer-option anime-option"
           class:correct={!gameState.hidePokemon && choice === gameState.pokemon.name}
           class:incorrect={!gameState.hidePokemon && choice === gameState.lastAnswer && !correctGuess}
@@ -155,8 +157,10 @@
           {:else if !gameState.hidePokemon && choice === gameState.lastAnswer && !correctGuess}
             <span class="wtp-choice-mark" aria-hidden="true">✕</span>
           {/if}
-        </button>
-      {/each}
+            </button>
+          </div>
+        {/each}
+      </div>
     </div>
 
     {#if gameState.hidePokemon}
