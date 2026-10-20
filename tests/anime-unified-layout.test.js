@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
+/** @param {string} path */
 const read = path => existsSync(path) ? readFileSync(path,'utf8') : '';
 const theme=read('src/lib/styles/anime-unified.css');
 const control=read('src/lib/components/Control.svelte');
