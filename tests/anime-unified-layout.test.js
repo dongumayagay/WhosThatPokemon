@@ -30,3 +30,8 @@ test('buttons and menus use one visual theme',()=>{
  assert.match(theme,/max-width: 400px/);
  assert.match(theme,/min-height: 52px/);
 });
+test('the page itself paints the anime art', () => {
+ const start=theme.indexOf('.site-shell {');
+ const end=theme.indexOf('}', start);
+ assert.ok(start>=0 && theme.slice(start,end).includes('classic-1998-rays.svg'));
+});
