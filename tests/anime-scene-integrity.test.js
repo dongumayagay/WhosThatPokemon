@@ -35,3 +35,16 @@ test('mobile layout has deliberate top spacing and leaves room for all silhouett
   assert.match(finish, /prefers-reduced-motion:\s*reduce/);
   assert.match(finish, /\[data-motion='off'\]/);
 });
+
+test('four edges of the broadcast dissolve instead of drawing a rectangular card', () => {
+  const art = finish.match(/\.anime-burst\s*\{([^}]+)\}/)?.[1] || '';
+  assert.match(art, /mask-image:\s*radial-gradient\(ellipse\s+59%\s+59%\s+at\s+45%\s+50%/);
+  assert.match(art, /#0008\s+66%,\s*transparent\s+88%/);
+});
+
+test('wide-screen answers fit long Pokémon names on one clean line', () => {
+  const wide = finish.split('@media (min-width: 850px)')[1] || '';
+  assert.ok(wide, 'wide-answer typography rules must exist');
+  assert.match(wide, /\.wtp-choice-name\s*\{[^}]*white-space:\s*nowrap;/);
+  assert.match(wide, /\.answer-option\.anime-option\s*\{[^}]*font-size:\s*clamp\(12px,\s*1\.1vw,\s*14px\);/);
+});
