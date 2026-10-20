@@ -7,59 +7,17 @@
     <stop offset=".7" stop-color="#69c4d4" stop-opacity=".88"/>
     <stop offset="1" stop-color="#46b1c6" stop-opacity="0"/>
   </radialGradient>
-  <linearGradient id="edgeFade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="515" y2="0">
-    <stop offset="0" stop-color="#ffffff"/><stop offset=".25" stop-color="#ffffff"/>
+  <radialGradient id="edgeFade" gradientUnits="userSpaceOnUse" cx="230" cy="210" r="280">
+    <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#ffffff"/>
     <stop offset=".65" stop-color="#666666"/><stop offset=".85" stop-color="#000000"/>
     <stop offset="1" stop-color="#000000"/>
-  </linearGradient>
+  </radialGradient>
   <mask id="aquaFade" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="480"><rect width="640" height="480" fill="url(#edgeFade)"/></mask>
   <clipPath id="aquaClip">
     <rect x="0" y="0" width="640" height="480"/>
   </clipPath>
 </defs>
-<rect width="640" height="480" fill="url(#heat)"/>
-<g id="warm-speedlines"><polygon points="265.5,-56.3 690,-17.1 690,-14.6 265.5,-54.5" fill="#ffc594" opacity="0.4"/>
-<polygon points="354.5,-50.6 690,-5.6 690,-2.2 354.5,-48.3" fill="#ff6b60" opacity="0.4"/>
-<polygon points="367.7,-37.2 690,-16.6 690,-11.2 367.7,-33.4" fill="#fff0c8" opacity="0.2"/>
-<polygon points="363.3,-14.2 690,51.6 690,56.8 363.3,-10.6" fill="#fff0c8" opacity="0.3"/>
-<polygon points="352.5,-0.7 690,36.7 690,42.8 352.5,3.6" fill="#ffe1b1" opacity="0.4"/>
-<polygon points="250.4,6.8 690,31.5 690,36.8 250.4,10.5" fill="#ffe1b1" opacity="0.1"/>
-<polygon points="281.3,20.2 690,54.1 690,56.3 281.3,21.7" fill="#ff6b60" opacity="0.5"/>
-<polygon points="250.4,30.1 690,72.6 690,74.5 250.4,31.4" fill="#fff0c8" opacity="0.5"/>
-<polygon points="299.5,50.7 690,86.8 690,93.9 299.5,55.7" fill="#c52142" opacity="0.5"/>
-<polygon points="316.8,68.6 690,63.3 690,70.3 316.8,73.5" fill="#ffc594" opacity="0.2"/>
-<polygon points="274.9,72.1 690,58.1 690,59.2 274.9,72.8" fill="#fff0c8" opacity="0.2"/>
-<polygon points="368.0,94.1 690,83.0 690,87.7 368.0,97.4" fill="#ffc594" opacity="0.4"/>
-<polygon points="307.6,117.2 690,138.9 690,140.6 307.6,118.5" fill="#ffa06d" opacity="0.2"/>
-<polygon points="344.5,117.3 690,165.6 690,170.8 344.5,121.0" fill="#ffa06d" opacity="0.3"/>
-<polygon points="346.5,132.0 690,212.6 690,215.0 346.5,133.7" fill="#fff0c8" opacity="0.2"/>
-<polygon points="344.1,160.8 690,203.9 690,207.3 344.1,163.2" fill="#fff0c8" opacity="0.4"/>
-<polygon points="326.4,162.5 690,196.0 690,201.1 326.4,166.1" fill="#ff6b60" opacity="0.5"/>
-<polygon points="375.0,191.2 690,230.2 690,234.3 375.0,194.1" fill="#ff6b60" opacity="0.4"/>
-<polygon points="257.6,192.0 690,267.5 690,272.2 257.6,195.3" fill="#c52142" opacity="0.2"/>
-<polygon points="309.3,211.9 690,263.8 690,270.3 309.3,216.4" fill="#fff0c8" opacity="0.5"/>
-<polygon points="360.9,234.6 690,265.8 690,271.4 360.9,238.5" fill="#c52142" opacity="0.2"/>
-<polygon points="269.3,249.6 690,279.1 690,284.3 269.3,253.2" fill="#c52142" opacity="0.1"/>
-<polygon points="363.1,250.5 690,303.6 690,308.3 363.1,253.8" fill="#ffe1b1" opacity="0.5"/>
-<polygon points="327.9,264.0 690,262.5 690,269.4 327.9,268.9" fill="#ffe1b1" opacity="0.5"/>
-<polygon points="251.1,283.8 690,300.5 690,301.8 251.1,284.7" fill="#ffe1b1" opacity="0.2"/>
-<polygon points="323.8,300.1 690,347.3 690,349.0 323.8,301.3" fill="#ffc594" opacity="0.5"/>
-<polygon points="277.2,306.6 690,351.6 690,357.3 277.2,310.6" fill="#ffe1b1" opacity="0.4"/>
-<polygon points="371.9,325.9 690,361.0 690,364.5 371.9,328.3" fill="#ff6b60" opacity="0.5"/>
-<polygon points="309.2,341.4 690,354.1 690,355.7 309.2,342.5" fill="#ffa06d" opacity="0.4"/>
-<polygon points="287.9,355.9 690,401.2 690,405.5 287.9,358.9" fill="#ffa06d" opacity="0.3"/>
-<polygon points="285.9,372.4 690,386.9 690,389.7 285.9,374.3" fill="#ff6b60" opacity="0.3"/>
-<polygon points="334.5,382.9 690,406.6 690,407.8 334.5,383.7" fill="#ffe1b1" opacity="0.2"/>
-<polygon points="296.1,411.1 690,409.2 690,415.3 296.1,415.4" fill="#ffc594" opacity="0.4"/>
-<polygon points="310.3,421.4 690,492.4 690,493.9 310.3,422.4" fill="#c52142" opacity="0.4"/>
-<polygon points="343.0,433.1 690,427.5 690,434.7 343.0,438.1" fill="#fff0c8" opacity="0.1"/>
-<polygon points="334.9,446.6 690,527.4 690,532.3 334.9,450.0" fill="#ffc594" opacity="0.4"/>
-<polygon points="263.2,452.6 690,451.2 690,454.2 263.2,454.7" fill="#c52142" opacity="0.5"/>
-<polygon points="287.4,469.6 690,508.8 690,510.9 287.4,471.0" fill="#ffe1b1" opacity="0.5"/>
-<polygon points="302.5,497.9 690,579.1 690,584.1 302.5,501.3" fill="#ff6b60" opacity="0.3"/>
-<polygon points="307.0,505.2 690,535.6 690,541.4 307.0,509.3" fill="#fff0c8" opacity="0.3"/>
-<polygon points="363.7,527.0 690,562.0 690,563.8 363.7,528.3" fill="#ff6b60" opacity="0.2"/>
-<polygon points="258.6,538.0 690,550.9 690,556.8 258.6,542.0" fill="#ff6b60" opacity="0.4"/></g>
+
 <g id="aqua-center" clip-path="url(#aquaClip)" mask="url(#aquaFade)">
   <rect width="640" height="480" fill="url(#cyanWash)"/>
   <g id="burst" transform="translate(108 -45)"><polygon class="cyan-ray" points="123.2,241.2 756.0,241.6 756.0,235.9 123.2,240.7" fill="#e8fafe" opacity="0.4"/>

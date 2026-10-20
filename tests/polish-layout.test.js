@@ -10,7 +10,7 @@ test('desktop keeps four guess choices in a single compact row',()=>{
   assert.match(polish,/\.anime-answers\s*\{\s*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/);
 });
 test('cyan burst fades out before the frame edge instead of drawing a hard wedge',()=>{
-  const gradient=svg.match(/<linearGradient id="edgeFade"[^>]*>([\s\S]*?)<\/linearGradient>/)?.[1]||'';
+  const gradient=svg.match(/<radialGradient id="edgeFade"[^>]*>([\s\S]*?)<\/radialGradient>/)?.[1]||'';
   assert.match(gradient,/<stop offset="\.65" stop-color="#666666"\/>/);
   assert.match(gradient,/<stop offset="\.85" stop-color="#000000"\/>/);
 });

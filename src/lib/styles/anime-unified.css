@@ -14,7 +14,7 @@ html, body { background: #e84643; }
   isolation: isolate;
   min-height: 100svh;
   overflow-x: clip;
-  background: url('/classic-1998-rays.svg') center center / 100% 100% no-repeat, #e84643;
+  background: #ec4551;
 }
 .site-shell::before {
   content: '';
@@ -423,3 +423,184 @@ button:focus-visible {
   .answer-option.anime-option { transition: none !important; }
 }
 [data-motion='off'] .answer-option.anime-option { transition: none !important; }
+
+/* COHERENT ANIME CANVAS */
+/* The TV illustration has a true 4:3 coordinate system; never stretch its
+   vector artwork to the aspect ratio of an entire browser window. The page
+   continues its palette and speed lines without becoming a second TV frame. */
+.site-shell {
+  background:
+    repeating-linear-gradient(157deg,
+      transparent 0 58px, #ffe8bc2a 59px 61px, transparent 62px 111px),
+    linear-gradient(113deg, #ec4752 0%, #f26a43 42%, #ea364a 100%);
+}
+.wtp-main {
+  margin-block: 0;
+  padding-top: clamp(10px, 2svh, 18px);
+  padding-bottom: 22px;
+  isolation: isolate;
+}
+.wtp-main::before {
+  content: '';
+  position: absolute;
+  inset: 0 -20% -12%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 55% 66% at 35% 34%,
+    #abecf64f 0%, #f1f9f32b 36%, transparent 80%);
+}
+.anime-stage {
+  background: transparent;
+  overflow: visible;
+  aspect-ratio: 4 / 3;
+}
+.anime-burst {
+  display: block;
+  inset: 0;
+  z-index: 0;
+  background: url('/classic-1998-rays.svg') center / 100% 100% no-repeat;
+  opacity: 1;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.anime-speedlines,
+.anime-grain { display: none; }
+.wtp-controls {
+  background: transparent;
+  padding-top: 12px;
+}
+.wtp-controls::before {
+  inset: -28px -12px -18px;
+  background: radial-gradient(ellipse 55% 69% at 29% 0%,
+    #c7f6f62b, transparent 78%);
+}
+.wtp-scoreline {
+  border: 1px solid #fff8dd6b;
+  border-radius: 8px;
+  padding: 7px 12px;
+  background: #103f70ac;
+  box-shadow: none;
+  margin: 3px auto 11px;
+  font-weight: 850;
+}
+.answer-option.anime-option {
+  border: 2px solid #174d7d;
+  border-bottom-width: 3px;
+  border-radius: 9px;
+  min-height: 56px;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #fff9e7 0%, #ffedb0 100%);
+  box-shadow: 0 2px 0 #582c4594;
+  color: #123963;
+  font-weight: 850;
+  transition: background .15s ease, transform .15s ease;
+}
+.answer-option.anime-option:not(:disabled):hover {
+  background: #fff5d8;
+  border-color: #0a426d;
+  transform: translateY(-1px);
+  filter: none;
+}
+.answer-option.anime-option:not(:disabled):active { transform: translateY(1px); }
+.wtp-choice-index {
+  border: 1px solid #c0eaf5;
+  background: #12618d;
+  color: #fff7b7;
+  box-shadow: none;
+}
+.wtp-primary {
+  background: linear-gradient(180deg,#fff9da,#ffdb65);
+  border: 2px solid #174775;
+  border-bottom-width: 4px;
+  border-radius: 10px;
+  box-shadow: 0 2px 0 #71304e8a;
+}
+.wtp-primary:hover { background: #ffebb4; }
+.wtp-menu-button {
+  background: #fff0b9;
+  border: 2px solid #144978;
+  border-bottom-width: 3px;
+  box-shadow: 0 2px 0 #79304c70;
+}
+.wtp-menu-button:hover,
+.wtp-menu-button:focus-visible {
+  background: #fff8d7;
+  transform: none;
+}
+.wtp-quiet-actions .wtp-text-action {
+  border: 1px solid #fff6d096;
+  background: #184873a6;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.wtp-menu-panel {
+  background: #fff8e6;
+  border-left: 4px solid #184a7a;
+}
+.wtp-menu-panel::before { opacity: .08; }
+.game-dialog {
+  background: #fff8e6;
+  border: 2px solid #174b7c;
+  box-shadow: 0 14px 42px #082c4478;
+}
+.wtp-footer { margin-top: auto; }
+@media (max-width: 650px) {
+  .wtp-main {
+    margin-block: 0;
+    padding-top: 12px;
+    padding-bottom: 16px;
+  }
+  .silhouette-holder {
+    left: 6%;
+    top: 15%;
+    width: 51%;
+    height: 61%;
+  }
+  .wtp-controls { padding-top: 9px; }
+  .answer-option.anime-option {
+    min-height: 54px;
+    padding: 8px 9px;
+  }
+}
+@media (max-width: 400px) {
+  .silhouette-holder {
+    left: 6%;
+    top: 16%;
+    width: 52%;
+    height: 60%;
+  }
+  .wtp-main { padding-top: 8px; }
+  .answer-option.anime-option {
+    min-height: 52px;
+    padding: 7px 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .anime-burst,
+  .answer-option.anime-option,
+  .site-shell::before,
+  .site-shell::after { animation: none !important; transition: none !important; }
+}
+[data-motion='off'] .anime-burst,
+[data-motion='off'] .answer-option.anime-option,
+[data-motion='off'] .site-shell::before,
+[data-motion='off'] .site-shell::after { animation: none !important; transition: none !important; }
+
+/* The four desktop choices share one tidy line, without broken Pokémon names. */
+@media (min-width: 850px) {
+  .answer-option.anime-option {
+    font-size: clamp(12px, 1.1vw, 14px);
+    padding: 9px 8px;
+    gap: 8px;
+  }
+  .wtp-choice-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+  }
+  .wtp-choice-index {
+    width: 27px;
+    height: 27px;
+  }
+}
