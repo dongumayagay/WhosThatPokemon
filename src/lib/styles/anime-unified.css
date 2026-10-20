@@ -14,7 +14,7 @@ html, body { background: #e84643; }
   isolation: isolate;
   min-height: 100svh;
   overflow-x: clip;
-  background: #e84643;
+  background: url('/classic-1998-rays.svg') center center / 100% 100% no-repeat, #e84643;
 }
 .site-shell::before {
   content: '';
@@ -22,8 +22,8 @@ html, body { background: #e84643; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 1;
-  background: url('/classic-1998-rays.svg') center center / 100% 100% no-repeat;
+  opacity: .16;
+  background: radial-gradient(ellipse at 24% 42%, #d9fdffbb 0%, #b4eff755 40%, transparent 69%);
   transform: scale(1);
   animation: unified-broadcast-breathe 16s ease-in-out infinite alternate;
 }
