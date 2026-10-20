@@ -12,7 +12,7 @@ test('cyan watercolor rays fade naturally without the old zigzag hard clip', () 
   const clip = svg.match(/<clipPath id="aquaClip">([\s\S]*?)<\/clipPath>/)?.[1] || '';
   assert.match(clip, /<rect\s+x="0"\s+y="0"\s+width="640"\s+height="480"/);
   assert.doesNotMatch(clip, /<path/);
-  assert.match(svg, /<g id="painted-feather-edge"[^>]*mask="url\\(#aquaFade\\)"/);
+  assert.match(svg, /<g id="painted-feather-edge"[^>]*mask="url\(#aquaFade\)"/);
 });
 
 test('one broadcast scene continues through the 4:3 stage, scores and all four answer buttons', () => {
