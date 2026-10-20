@@ -19,7 +19,7 @@ test('one shared anime background reaches beyond the TV frame',()=>{
  assert.match(theme,/classic-1998-rays.svg/);
  assert.match(theme,/\.site-shell::before/);
  assert.match(theme,/\.anime-stage[^{]*\{[^}]*overflow: visible;/s);
- assert.match(theme,/\.anime-burst[^{]*\{[^}]*display: none;/s);
+ assert.match(theme,/\.anime-burst[^{]*\{[^}]*display: block;/s);
 });
 test('buttons and menus use one visual theme',()=>{
  assert.match(theme,/--wtp-gold:/);
@@ -33,5 +33,6 @@ test('buttons and menus use one visual theme',()=>{
 test('the page itself paints the anime art', () => {
  const start=theme.indexOf('.site-shell {');
  const end=theme.indexOf('}', start);
- assert.ok(start>=0 && theme.slice(start,end).includes('classic-1998-rays.svg'));
+ assert.ok(start>=0 && !theme.slice(start,end).includes('classic-1998-rays.svg'));
+ assert.match(theme,/\.anime-burst[^{]*\{[^}]*classic-1998-rays\.svg/s);
 });
