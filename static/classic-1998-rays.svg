@@ -14,7 +14,7 @@
   </linearGradient>
   <mask id="aquaFade" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="480"><rect width="640" height="480" fill="url(#edgeFade)"/></mask>
   <clipPath id="aquaClip">
-    <path d="M0 0 H211 C218 25 238 37 232 57 C226 79 266 89 260 110 C254 131 298 147 282 169 C271 185 315 207 296 228 C319 249 298 267 286 278 C303 307 268 316 275 336 C283 362 247 377 235 398 C246 428 207 448 210 480 H0Z"/>
+    <rect x="0" y="0" width="640" height="480"/>
   </clipPath>
 </defs>
 <rect width="640" height="480" fill="url(#heat)"/>
@@ -191,7 +191,7 @@
 <polygon class="cyan-ray" points="159.7,235.7 752.6,174.3 752.3,171.4 159.6,235.0" fill="#b4f4fa" opacity="0.4"/>
 <polygon class="cyan-ray" points="126.0,241.0 755.3,210.7 755.1,207.3 125.9,239.0" fill="#edffff" opacity="0.4"/></g>
 </g>
-<g id="painted-feather-edge"><polygon class="ink-fray" points="160.5,92.3 206.2,-43.0 205.0,-43.4 156.3,90.8" fill="#f3ffff" opacity="0.3"/>
+<g id="painted-feather-edge" mask="url(#aquaFade)"><polygon class="ink-fray" points="160.5,92.3 206.2,-43.0 205.0,-43.4 156.3,90.8" fill="#f3ffff" opacity="0.3"/>
 <polygon class="ink-fray" points="175.2,55.1 192.9,5.1 191.8,4.6 173.2,54.4" fill="#f3ffff" opacity="0.1"/>
 <polygon class="ink-fray" points="180.3,63.7 221.0,-37.3 219.9,-37.8 177.7,62.6" fill="#e8ffff" opacity="0.2"/>
 <polygon class="ink-fray" points="187.7,57.5 240.0,-63.8 239.6,-64.0 185.7,56.6" fill="#c2f6f2" opacity="0.2"/>

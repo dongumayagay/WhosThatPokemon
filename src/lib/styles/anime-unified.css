@@ -364,3 +364,62 @@ button:focus-visible {
 [data-motion='off'].site-shell::before,
 [data-motion='off'].site-shell::after {animation:none !important;}
 [data-motion='off'] .answer-option.anime-option {transition:none !important;}
+
+/* SEAMLESS BROADCAST FINISH */
+/* Keep the original 4:3 character composition, without building a separate TV
+   "card": the full-page rays are already painted on .site-shell. The quiz
+   controls add only a translucent wash, so the same color field is continuous. */
+.wtp-controls {
+  isolation: isolate;
+}
+.wtp-controls::before {
+  content: '';
+  position: absolute;
+  inset: -27px -15px -20px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 75% 86% at 27% 0%,
+    #d5f7f758 0%, #caeefc37 34%, #ffe88d1c 60%, transparent 84%);
+}
+.answer-option.anime-option {
+  background: linear-gradient(115deg, #d7f6ff 0%, #e8fcff 22%, #fff6bc 58%, #ffdc59 100%);
+  color: #09386d;
+  border-color: #125289;
+  border-bottom-color: #0a3568;
+  box-shadow: 0 4px 0 #80354f89, inset 0 1px 0 #fffef0;
+}
+.answer-option.anime-option:not(:disabled):hover {
+  background: linear-gradient(115deg, #f2ffff 0%, #e7fbff 18%, #fff4b1 60%, #ffe47c 100%);
+  border-color: #09457b;
+}
+.answer-option.anime-option:focus-visible {
+  outline: 3px solid #fff9c7;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #0b447d, 0 4px 0 #80354f89;
+}
+.wtp-choice-index {
+  border: 2px solid #fff5bd;
+  background: linear-gradient(155deg, #1a71a2, #0b386f);
+  color: #ffe477;
+}
+.wtp-primary {
+  background: linear-gradient(115deg, #d9faff 0%, #fff2a3 37%, #ffdc50 79%, #ffbd49 100%);
+}
+.wtp-primary:hover {
+  background: linear-gradient(115deg, #edffff 0%, #fff9bd 38%, #ffe777 100%);
+}
+.wtp-menu-button {
+  background: linear-gradient(115deg, #d8f8ff 0%, #fff2af 48%, #ffda54 100%);
+}
+.wtp-menu-button:hover,
+.wtp-menu-button:focus-visible {
+  background: linear-gradient(115deg, #eefeff, #ffe891);
+}
+@media (max-width: 400px) {
+  .wtp-controls::before { inset: -19px -7px -20px; }
+  .answer-option.anime-option { min-height: 54px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .answer-option.anime-option { transition: none !important; }
+}
+[data-motion='off'] .answer-option.anime-option { transition: none !important; }
