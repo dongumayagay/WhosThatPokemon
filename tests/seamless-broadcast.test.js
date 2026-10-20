@@ -17,12 +17,12 @@ test('cyan watercolor rays fade naturally without the old zigzag hard clip', () 
 
 test('one broadcast scene continues through the 4:3 stage, scores and all four answer buttons', () => {
   assert.match(layout, /<PokemonImage\s*\/>\s*<Control\s*\/>/);
-  assert.match(theme, /\.site-shell\s*\{[^}]*classic-1998-rays\.svg/s);
+  assert.match(theme, /\.anime-burst\s*\{[^}]*classic-1998-rays\.svg/s);
   assert.match(theme, /\.anime-stage\s*\{[^}]*overflow:\s*visible/s);
-  assert.match(theme, /\.anime-burst,\s*\.anime-speedlines,\s*\.anime-grain\s*\{\s*display:\s*none;/s);
+  assert.match(theme, /\.anime-burst\s*\{\s*display:\s*block;/s);
   assert.match(theme, /\/\* SEAMLESS BROADCAST FINISH \*\//);
   assert.match(theme, /\.wtp-controls::before\s*\{[^}]*radial-gradient/s);
-  assert.match(theme, /\.answer-option\.anime-option\s*\{[^}]*linear-gradient\(11[0-9]deg,[^}]*#d[0-9a-f]{5}/is);
+  assert.match(theme, /\.answer-option\.anime-option\s*\{[^}]*linear-gradient\(180deg,[^}]*#fff9e7/is);
   assert.match(stage, /class="mystery-silhouette"/);
 });
 
