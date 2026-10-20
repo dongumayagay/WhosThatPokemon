@@ -459,11 +459,9 @@ button:focus-visible {
   inset: 0;
   z-index: 0;
   background: url('/classic-1998-rays.svg') center / 100% 100% no-repeat;
-  opacity: .9;
-  -webkit-mask-image: radial-gradient(ellipse 59% 59% at 45% 50%,
-    #000 26%, #000e 44%, #0008 66%, transparent 88%);
-  mask-image: radial-gradient(ellipse 59% 59% at 45% 50%,
-    #000 26%, #000e 44%, #0008 66%, transparent 88%);
+  opacity: 1;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 .anime-speedlines,
 .anime-grain { display: none; }
