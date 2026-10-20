@@ -37,8 +37,8 @@ test('broadcast answer design stays readable, accessible and responsive', () => 
 test('the pale cyan burst is centered behind the Pokémon on both phone and desktop', () => {
   const paint = svg.match(/<radialGradient id="cyanWash"[^>]*>/)?.[0] || '';
   assert.match(paint, /cx="230" cy="185" fx="230" fy="180"/);
-  const feather = svg.match(/<linearGradient id="edgeFade"[^>]*>/)?.[0] || '';
-  assert.match(feather, /x2="515"/);
+  const feather = svg.match(/<radialGradient id="edgeFade"[^>]*>/)?.[0] || '';
+  assert.match(feather, /cx="230" cy="210" r="280"/);
   assert.match(svg, /<g id="burst" transform="translate\(108 -45\)">/);
   assert.match(svg, /<g id="painted-feather-edge"[^>]*transform="translate\(108 -45\)"/);
 });

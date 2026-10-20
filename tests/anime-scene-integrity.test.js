@@ -16,7 +16,7 @@ test('broadcast artwork is not distorted into arbitrary device aspect ratios', (
   assert.match(finish, /\.site-shell\s*\{[^}]*repeating-linear-gradient/s);
   assert.match(finish, /\.anime-burst\s*\{\s*display:\s*block;/s);
   assert.match(finish, /classic-1998-rays\.svg/);
-  assert.match(finish, /mask-image:\s*radial-gradient/);
+  assert.match(finish, /mask-image:\s*none;/);
 });
 
 test('Pokémon, backdrop and answer controls belong to the same full-page scene', () => {
@@ -38,8 +38,8 @@ test('mobile layout has deliberate top spacing and leaves room for all silhouett
 
 test('four edges of the broadcast dissolve instead of drawing a rectangular card', () => {
   const art = finish.match(/\.anime-burst\s*\{([^}]+)\}/)?.[1] || '';
-  assert.match(art, /mask-image:\s*radial-gradient\(ellipse\s+59%\s+59%\s+at\s+45%\s+50%/);
-  assert.match(art, /#0008\s+66%,\s*transparent\s+88%/);
+  assert.match(art, /mask-image:\s*none;/);
+  assert.match(art, /opacity:\s*1;/);
 });
 
 test('wide-screen answers fit long Pokémon names on one clean line', () => {
